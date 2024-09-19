@@ -1,7 +1,7 @@
-const SecondaryButton = ({ children }) => {
+const SecondaryButton = ({ children ,onClick}) => {
   return (
-    <button className="bg-white text-[#002b4c] font-bold py-2 px-4 rounded-full border border-[#002b4c] hover:bg-[#B92A3B] hover:text-white transition duration-300">
-      {children}
+    <button onClick={onClick} className="bg-white text-[#002b4c] font-bold py-2 px-4 rounded-full border border-[#002b4c] hover:bg-[#B92A3B] hover:text-white transition duration-300">
+     { children}
     </button>
   );
 };
