@@ -4,7 +4,7 @@ import FieldOfStudy from '../features/fieldofstudy/fieldofstudy';
 export default function FieldOfStudyPage() {
   return (
     <div>
-      Hello
+    
       <FieldOfStudy /> 
     </div>
   );
