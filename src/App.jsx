@@ -10,6 +10,10 @@ import Layout from "./layout/Layout";
 import AdminPage from "./pages/AdminPage";
 import ScholarshipPage from "./pages/ScholarshipPage";
 import AddScholarship from "./pages/AddScholarship";
+import LanguagePage from "./pages/LanguagePage";
+import CourseTypepage from "./pages/CourseTypepage";
+import ModeOfstudypage from "./pages/ModeOfstudypage";
+import Fieldofstudypage from "./pages/Fieldofstudypage";
 
 function App() {
   return (
@@ -51,6 +55,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+             <Route
+              path="/fieldofstudy"
+              element={
+                <ProtectedRoute>
+                  <Fieldofstudypage/>
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/add-scholarship"
               element={
@@ -59,11 +71,35 @@ function App() {
                 </ProtectedRoute>
               }
             />
+              <Route
+              path="/language"
+              element={
+                <ProtectedRoute>
+                  <LanguagePage/>
+                </ProtectedRoute>
+              }
+                 />
+            <Route
+              path="/CourseType"
+              element={
+                <ProtectedRoute>
+                  <CourseTypepage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/login"
               element={
                 <ProtectedRoute>
                   <LoginPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/mode-of-study"
+              element={
+                <ProtectedRoute>
+                  <ModeOfstudypage />
                 </ProtectedRoute>
               }
             />

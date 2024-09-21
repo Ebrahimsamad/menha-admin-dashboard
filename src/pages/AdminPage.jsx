@@ -5,6 +5,7 @@ function AdminPage() {
   return <div>
     <AdminList/>
   </div>;
+
 }
 
 export default AdminPage;
