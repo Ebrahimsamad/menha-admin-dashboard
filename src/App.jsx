@@ -10,6 +10,7 @@ import Layout from "./layout/Layout";
 import AdminPage from "./pages/AdminPage";
 import ScholarshipPage from "./pages/ScholarshipPage";
 import AddScholarship from "./pages/AddScholarship";
+import LanguagePage from "./pages/LanguagePage";
 import CourseTypepage from "./pages/CourseTypepage";
 import ModeOfstudypage from "./pages/ModeOfstudypage";
 import Fieldofstudypage from "./pages/Fieldofstudypage";
@@ -70,7 +71,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            \ <Route
+              <Route
+              path="/language"
+              element={
+                <ProtectedRoute>
+                  <LanguagePage/>
+                </ProtectedRoute>
+              }
+                 />
+            <Route
               path="/CourseType"
               element={
                 <ProtectedRoute>
