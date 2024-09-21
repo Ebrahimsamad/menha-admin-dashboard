@@ -10,6 +10,7 @@ import Layout from "./layout/Layout";
 import AdminPage from "./pages/AdminPage";
 import ScholarshipPage from "./pages/ScholarshipPage";
 import AddScholarship from "./pages/AddScholarship";
+import LanguagePage from "./pages/LanguagePage";
 
 function App() {
   return (
@@ -56,6 +57,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AddScholarship />
+                </ProtectedRoute>
+              }
+            />
+              <Route
+              path="/language"
+              element={
+                <ProtectedRoute>
+                  <LanguagePage/>
                 </ProtectedRoute>
               }
             />
