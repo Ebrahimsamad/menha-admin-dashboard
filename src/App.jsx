@@ -10,6 +10,7 @@ import Layout from "./layout/Layout";
 import AdminPage from "./pages/AdminPage";
 import ScholarshipPage from "./pages/ScholarshipPage";
 import AddScholarship from "./pages/AddScholarship";
+import Fieldofstudypage from "./pages/Fieldofstudypage";
 
 function App() {
   return (
@@ -48,6 +49,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ScholarshipPage />
+                </ProtectedRoute>
+              }
+            />
+             <Route
+              path="/fieldofstudy"
+              element={
+                <ProtectedRoute>
+                  <Fieldofstudypage/>
                 </ProtectedRoute>
               }
             />
