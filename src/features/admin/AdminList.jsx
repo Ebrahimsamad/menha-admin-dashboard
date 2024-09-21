@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import adminService from "../../services/adminService";
-import { Toaster, toast } from "react-hot-toast";
-import AdminEdit from "./Adminedit";
+import {  toast } from "react-hot-toast";
+import AdminEdit from "./AdminEdit";
 import RepeatPara from "../../ui/RepeatPara";
 import SecondaryButton from "../../ui/SecondaryButton";
 import PrimaryButton from "../../ui/PrimaryButton";
