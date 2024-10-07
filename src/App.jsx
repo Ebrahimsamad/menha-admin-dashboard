@@ -14,6 +14,7 @@ import LanguagePage from "./pages/LanguagePage";
 import CourseTypepage from "./pages/CourseTypepage";
 import ModeOfstudypage from "./pages/ModeOfstudypage";
 import Fieldofstudypage from "./pages/Fieldofstudypage";
+import Portofoliopage from "./pages/Portofoliopage";
 
 function App() {
   return (
@@ -60,6 +61,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Fieldofstudypage/>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/portofolio"
+              element={
+                <ProtectedRoute>
+                  <Portofoliopage/>
                 </ProtectedRoute>
               }
             />

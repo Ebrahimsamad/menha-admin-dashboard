@@ -1,4 +1,4 @@
-function Spinner() {
+function Spinner({color}) {
   return (
     <svg
       className="animate-spin h-5 w-5 text-white"
@@ -15,7 +15,7 @@ function Spinner() {
         strokeWidth="4"
       ></circle>
       <path
-        className="opacity-75"
+        className={`opacity-75 text-[${color}]`}
         fill="currentColor"
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
       ></path>

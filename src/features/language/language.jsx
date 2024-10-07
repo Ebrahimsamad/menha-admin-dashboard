@@ -4,6 +4,7 @@ import { toast } from "react-hot-toast";
 import Spinner from "../../ui/Spinner";
 import RepeatParagraph from "../../ui/RepeatPara";
 import PrimaryButton from "../../ui/PrimaryButton";
+import SecondaryButton from "../../ui/SecondaryButton";
 import { IoBookOutline } from "react-icons/io5"; 
 
 const Language = () => {
@@ -51,24 +52,36 @@ const Language = () => {
     }
   };
 
+  const languageToDelete = languages.find(lang => lang._id === confirmDeleteId);
+
   return (
-<div className="container mx-auto p-9">
-        {confirmDeleteId && (
-        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4" role="alert">
-          <p>Are you sure you want to delete this language?</p>
-          <div className="flex justify-start space-x-4 mt-2">
-            <button onClick={() => deleteConfirmed(confirmDeleteId)} className="text-red-600 hover:bg-red-100 rounded-full p-2">
-              Yes
-            </button>
-            <button onClick={() => setConfirmDeleteId(null)} className="text-gray-600 hover:bg-gray-100 rounded-full p-2">
-              No
-            </button>
+    <div className="container mx-auto p-6">
+      {confirmDeleteId && languageToDelete && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full relative animate-fade-in">
+            <h3 className="text-lg font-semibold mb-4 text-center text-[#003a65]">
+              Are you sure you want to delet <span className="  text-[#B92A3B]">{languageToDelete.name}</span>?</h3>
+            <div className="flex justify-center space-x-4">
+              <SecondaryButton onClick={() => deleteConfirmed(confirmDeleteId)}>
+                {loadingId === confirmDeleteId ? (
+                  <div className="flex items-center">
+                    <Spinner color={"#003a65"} />
+                    <span className="ml-2">Deleting...</span>
+                  </div>
+                ) : (
+                  "Delete"
+                )}
+              </SecondaryButton>
+              <PrimaryButton onClick={() => setConfirmDeleteId(null)}>
+                Cancel
+              </PrimaryButton>
+            </div>
           </div>
         </div>
       )}
 
       <RepeatParagraph>
-        <h1 className="text-2xl sm:text-3xl mb-4 font-semibold">Language List</h1>
+        <h1 className="text-2xl sm:text-3xl mb-4 font-bold">Language List</h1>
       </RepeatParagraph>
 
       <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
@@ -80,18 +93,19 @@ const Language = () => {
           <div className="text-red-600 text-sm p-4">{error}</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead className="bg-gray-100 text-gray-700 text-xs">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-100">
                 <tr>
-                  <th className="px-4 py-5 font-semibold"></th>
-                  <th className="px-4 py-5 font-semibold"></th>
+                  <th className="px-4 py-5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Language</th>
+                  <th className=""></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 text-xs sm:text-sm">
-                {languages.map((language) => (  
-                  <tr key={language._id} className="  p-4 rounded-lg shadow transition-all duration-200">
+              <tbody className="bg-white divide-y divide-gray-200">
+                {languages.map((language) => (
+                  <tr key={language._id} className="hover:bg-gray-50 transition">
                     <td className="px-4 py-5">
-                      <h3 className="text-xl font-semibold text-gray-800">{language.name}</h3>
+                      
+                      <h3 className="text-xl font-semibold text-[#003a65] ">{language.name}</h3>
                       <div className="flex items-center mt-2">
                         <IoBookOutline className="text-gray-600 mr-2" size={16} />
                         {language.course && language.course.length > 0 ? (
@@ -105,18 +119,23 @@ const Language = () => {
                         )}
                       </div>
                     </td>
-                    <td className="px-4 py-4 whitespace-wrap text-sm text-center">
-                      <PrimaryButton
-                        onClick={() => handleDelete(language._id)}
-                        className={`p-3 transition-colors duration-300 ${
-                          loadingId === language._id
-                            ? "text-gray-400"
-                            : "text-red-600 hover:bg-red-100 rounded-full hover:shadow-md"
-                        }`}
-                        disabled={loadingId === language._id}
-                      >
-                        {loadingId === language._id ? "Deleting..." : "Delete"}
-                      </PrimaryButton>
+                    <td className="px-4 py-4 whitespace-wrap text-center">
+                      <div className="flex justify-end mr-4">
+                        <PrimaryButton
+                          onClick={() => handleDelete(language._id)}
+                          className={`p-3 transition-colors duration-300 ${
+                            loadingId === language._id ? "text-gray-400" : "text-red-600 hover:bg-red-100 rounded-full hover:shadow-md"
+                          }`}
+                          disabled={loadingId === language._id}
+                        >
+                          {loadingId === language._id ? (
+                            <div className="flex items-center">
+                              <Spinner color={"#003a65"} />
+                              <span className="ml-2">Deleting...</span>
+                            </div>
+                          ) : "Delete"}
+                        </PrimaryButton>
+                      </div>
                     </td>
                   </tr>
                 ))}
