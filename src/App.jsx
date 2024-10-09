@@ -8,13 +8,14 @@ import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./ui/ProtectedRoute";
 import Layout from "./layout/Layout";
 import AdminPage from "./pages/AdminPage";
-import ScholarshipPage from "./pages/ScholarshipPage";
 import AddScholarship from "./pages/AddScholarship";
 import LanguagePage from "./pages/LanguagePage";
 import CourseTypepage from "./pages/CourseTypepage";
 import ModeOfstudypage from "./pages/ModeOfstudypage";
 import Fieldofstudypage from "./pages/Fieldofstudypage";
 import Portofoliopage from "./pages/Portofoliopage";
+import ScholarshipsPage from "./pages/ScholarshipsPage";
+import UniversityPage from "./pages/UniversityPage";
 
 function App() {
   return (
@@ -49,26 +50,34 @@ function App() {
               }
             />
             <Route
-              path="/scholarship"
+              path="/scholarships"
               element={
                 <ProtectedRoute>
-                  <ScholarshipPage />
-                </ProtectedRoute>
-              }
-            />
-             <Route
-              path="/fieldofstudy"
-              element={
-                <ProtectedRoute>
-                  <Fieldofstudypage/>
+                  <ScholarshipsPage />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/portofolio"
+              path="/universities"
               element={
                 <ProtectedRoute>
-                  <Portofoliopage/>
+                  <UniversityPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/fieldofstudy"
+              element={
+                <ProtectedRoute>
+                  <Fieldofstudypage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/portfolio"
+              element={
+                <ProtectedRoute>
+                  <Portofoliopage />
                 </ProtectedRoute>
               }
             />
@@ -80,14 +89,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
-              <Route
+            <Route
               path="/language"
               element={
                 <ProtectedRoute>
-                  <LanguagePage/>
+                  <LanguagePage />
                 </ProtectedRoute>
               }
-                 />
+            />
             <Route
               path="/CourseType"
               element={
