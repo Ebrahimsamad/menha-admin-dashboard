@@ -35,18 +35,26 @@ const Navbar = () => {
           </li>
           <li className="group">
             <NavLink
-              to="/scholarship"
+              to="/scholarships"
               className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
             >
-              Scholarship
+              Scholarships
             </NavLink>
           </li>
           <li className="group">
             <NavLink
-              to="/add-scholarship"
+              to="/universities"
               className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
             >
-              Add Scholarship
+              Universities
+            </NavLink>
+          </li>
+          <li className="group">
+            <NavLink
+              to="/portfolio"
+              className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
+            >
+              Portfolio
             </NavLink>
           </li>
         </ul>
@@ -116,18 +124,26 @@ const Navbar = () => {
         </li>
         <li className="group">
           <NavLink
-            to="/scholarship"
+            to="/scholarships"
             className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
           >
-            Scholarship
+            Scholarships
           </NavLink>
         </li>
         <li className="group">
           <NavLink
-            to="/add-scholarship"
+            to="/universities"
             className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
           >
-            Add Scholarship
+            Universities
+          </NavLink>
+        </li>
+        <li className="group">
+          <NavLink
+            to="/portfolio"
+            className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
+          >
+            Portfolio
           </NavLink>
         </li>
 
