@@ -5,7 +5,7 @@ import AdminEdit from "./AdminEdit";
 import RepeatPara from "../../ui/RepeatPara";
 import SecondaryButton from "../../ui/SecondaryButton";
 import PrimaryButton from "../../ui/PrimaryButton";
-import Spinner from "../../ui/Spinner"; // تأكد من استيراد Spinner
+import Spinner from "../../ui/Spinner"; 
 
 const AdminList = () => {
   const [admins, setAdmins] = useState([]);
@@ -14,9 +14,9 @@ const AdminList = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [adminToDelete, setAdminToDelete] = useState(null); // لإدارة الأدمين الذي سيتم حذفه
-  const [loadingId, setLoadingId] = useState(null); // معرف الحذف قيد التنفيذ
-  const [confirmDeleteId, setConfirmDeleteId] = useState(null); // معرف الحذف لتأكيد العملية
+  const [adminToDelete, setAdminToDelete] = useState(null); 
+  const [loadingId, setLoadingId] = useState(null); 
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null); 
 
   useEffect(() => {
     fetchAdmins();
@@ -33,7 +33,7 @@ const AdminList = () => {
         const parsedError = JSON.parse(error.message.match(/{.*}/)[0]);
         errorMessage = parsedError.message;
       } catch (parseError) {
-        console.error("Failed to parse error message:", parseError);
+        
         errorMessage = error.message;
       }
       setError(`${errorMessage}. Please try again later.`);
@@ -59,7 +59,7 @@ const AdminList = () => {
       toast.success("Admin deleted successfully");
     } catch (error) {
       toast.error("Error deleting admin. Please try again.");
-      console.error("Error deleting admin:", error);
+      
     } finally {
       setShowDeleteConfirmation(false); 
       setAdminToDelete(null); 
