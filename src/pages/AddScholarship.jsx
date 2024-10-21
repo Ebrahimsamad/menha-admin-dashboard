@@ -1,5 +1,12 @@
-function AddScholarship() {
-  return <div>Add Scholarship Page</div>;
+
+import AddScholarship from './../features/addSchholarship/AddScholarship';
+
+export default function AddScholarShipPage() {
+  return (
+   <>
+
+   <AddScholarship/>
+   </>
+  )
 }
 
-export default AddScholarship;
