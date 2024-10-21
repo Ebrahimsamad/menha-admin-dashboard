@@ -142,7 +142,9 @@ export default function AddScholarship() {
     // console.log("finalDataForBackend:", finalDataForBackend);
 
     try {
-    
+      const token = localStorage.getItem("token");
+      const response = await postScholarship(finalDataForBackend, token);
+      console.log("Successfully added scholarship:", response);
 
       setIsForm1Submitted(false);
       setIsForm2Submitted(false);
