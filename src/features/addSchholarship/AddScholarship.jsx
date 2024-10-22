@@ -27,15 +27,7 @@ export default function AddScholarship() {
   const [scholarships, setScholarships] = useState([]);
   const location = useLocation();
 
-  // const [selectedCourseType, setSelectedCourseType] = useState("");
-  // const [selectedLanguage, setSelectedLanguage] = useState("");
-  // const [selectedFieldOfStudy, setSelectedFieldOfStudy] = useState("");
-  // const [selectedModeOfStudy, setSelectedModeOfStudy] = useState("");
-  // const [selectedUniversity, setSelectedUniversity] = useState("");
 
-  // const [isWinter, setIsWinter] = useState(false);
-  // const [isFree, setIsFree] = useState(false);
-  // const [isFullTime, setIsFullTime] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -139,7 +131,7 @@ export default function AddScholarship() {
           : combinedData.gpaOption,
     };
 
-    // console.log("finalDataForBackend:", finalDataForBackend);
+      console.log("finalDataForBackend:", finalDataForBackend);
 
     try {
       const token = localStorage.getItem("token");
