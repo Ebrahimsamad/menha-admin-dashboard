@@ -227,38 +227,38 @@ export default function ScholarShipForm1({
 
     saveDataToLocalStorage();
   };
-  // if (loading) {
-  //   return (
-  //     <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-12">
-  //       <Toaster />
-  //       <div className="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full">
-  //         <form className="space-y-6">
-  //           <div className="animate-pulse">
-  //             <div className="flex items-center">
-  //               <div className="h-6 bg-gray-300 w-1/2 rounded mb-4"></div>
-  //             </div>
-  //             <div className="flex items-center">
-  //               <div className="h-6 bg-gray-300 w-3/4 rounded mb-4"></div>
-  //             </div>
-  //             <div className="flex items-center">
-  //               <div className="h-6 bg-gray-300 w-full rounded mb-4"></div>
-  //             </div>
-  //             <div className="flex items-center">
-  //               <div className="h-6 bg-gray-300 w-1/2 rounded mb-4"></div>
-  //             </div>
-  //             <div className="flex items-center">
-  //               <div className="h-6 bg-gray-300 w-1/2 rounded mb-4"></div>
-  //             </div>
-  //             <div className="flex items-center">
-  //               <div className="h-6 bg-gray-300 w-1/2 rounded mb-4"></div>
-  //             </div>
-  //             <div className="h-12 bg-gray-300 rounded"></div>
-  //           </div>
-  //         </form>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-12">
+        <Toaster />
+        <div className="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full">
+          <form className="space-y-6">
+            <div className="animate-pulse">
+              <div className="flex items-center">
+                <div className="h-6 bg-gray-300 w-1/2 rounded mb-4"></div>
+              </div>
+              <div className="flex items-center">
+                <div className="h-6 bg-gray-300 w-3/4 rounded mb-4"></div>
+              </div>
+              <div className="flex items-center">
+                <div className="h-6 bg-gray-300 w-full rounded mb-4"></div>
+              </div>
+              <div className="flex items-center">
+                <div className="h-6 bg-gray-300 w-1/2 rounded mb-4"></div>
+              </div>
+              <div className="flex items-center">
+                <div className="h-6 bg-gray-300 w-1/2 rounded mb-4"></div>
+              </div>
+              <div className="flex items-center">
+                <div className="h-6 bg-gray-300 w-1/2 rounded mb-4"></div>
+              </div>
+              <div className="h-12 bg-gray-300 rounded"></div>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-12">
