@@ -131,7 +131,7 @@ export default function AddScholarship() {
           : combinedData.gpaOption,
     };
 
-      // console.log("finalDataForBackend:", finalDataForBackend);
+       console.log("finalDataForBackend:", finalDataForBackend);
 
     try {
       const token = localStorage.getItem("token");
@@ -211,6 +211,9 @@ export default function AddScholarship() {
 
               <ul className="space-y-6">
                 <li>
+                  <div className="skeleton-loader w-3/4 h-6 bg-gray-300 rounded"></div>
+                </li>
+                  <li>
                   <div className="skeleton-loader w-3/4 h-6 bg-gray-300 rounded"></div>
                 </li>
                 <li>
