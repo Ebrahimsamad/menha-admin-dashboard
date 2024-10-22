@@ -131,7 +131,7 @@ export default function AddScholarship() {
           : combinedData.gpaOption,
     };
 
-      console.log("finalDataForBackend:", finalDataForBackend);
+      // console.log("finalDataForBackend:", finalDataForBackend);
 
     try {
       const token = localStorage.getItem("token");
