@@ -27,8 +27,6 @@ export default function AddScholarship() {
   const [scholarships, setScholarships] = useState([]);
   const location = useLocation();
 
-
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -131,7 +129,7 @@ export default function AddScholarship() {
           : combinedData.gpaOption,
     };
 
-      // console.log("finalDataForBackend:", finalDataForBackend);
+    // console.log("finalDataForBackend:", finalDataForBackend);
 
     try {
       const token = localStorage.getItem("token");
