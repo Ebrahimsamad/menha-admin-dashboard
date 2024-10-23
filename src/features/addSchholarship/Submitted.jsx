@@ -8,7 +8,7 @@ export default function Submitted() {
       <div className="bg-[#002A45] p-4 sm:p-6 rounded-t-lg text-center">
         <Link to="/dashboard">
           <img
-            src="/public/logo.png"
+            src="/logo.png"
             alt="Men7a Logo"
             className="h-12 sm:h-16 w-auto mx-auto mb-3 sm:mb-4 object-contain"
           />
