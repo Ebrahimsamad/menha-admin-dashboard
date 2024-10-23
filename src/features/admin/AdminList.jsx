@@ -5,7 +5,8 @@ import AdminEdit from "./AdminEdit";
 import RepeatPara from "../../ui/RepeatPara";
 import SecondaryButton from "../../ui/SecondaryButton";
 import PrimaryButton from "../../ui/PrimaryButton";
-import Spinner from "../../ui/Spinner"; 
+import Spinner from "../../ui/Spinner";
+import SkeletonRow from "../../ui/SkeletonRowThree";
 
 const AdminList = () => {
   const [admins, setAdmins] = useState([]);
@@ -14,9 +15,9 @@ const AdminList = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [adminToDelete, setAdminToDelete] = useState(null); 
-  const [loadingId, setLoadingId] = useState(null); 
-  const [confirmDeleteId, setConfirmDeleteId] = useState(null); 
+  const [adminToDelete, setAdminToDelete] = useState(null);
+  const [loadingId, setLoadingId] = useState(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
   useEffect(() => {
     fetchAdmins();
@@ -33,7 +34,6 @@ const AdminList = () => {
         const parsedError = JSON.parse(error.message.match(/{.*}/)[0]);
         errorMessage = parsedError.message;
       } catch (parseError) {
-        
         errorMessage = error.message;
       }
       setError(`${errorMessage}. Please try again later.`);
@@ -44,26 +44,25 @@ const AdminList = () => {
   };
 
   const handleDelete = (admin) => {
-    setAdminToDelete(admin); 
-    setShowDeleteConfirmation(true); 
-    setConfirmDeleteId(admin._id); 
+    setAdminToDelete(admin);
+    setShowDeleteConfirmation(true);
+    setConfirmDeleteId(admin._id);
   };
 
   const confirmDelete = async () => {
     if (!adminToDelete) return;
 
-    setLoadingId(confirmDeleteId); 
+    setLoadingId(confirmDeleteId);
     try {
       await adminService.deleteAdmin(adminToDelete._id);
       setAdmins(admins.filter((admin) => admin._id !== adminToDelete._id));
       toast.success("Admin deleted successfully");
     } catch (error) {
       toast.error("Error deleting admin. Please try again.");
-      
     } finally {
-      setShowDeleteConfirmation(false); 
-      setAdminToDelete(null); 
-      setLoadingId(null); 
+      setShowDeleteConfirmation(false);
+      setAdminToDelete(null);
+      setLoadingId(null);
     }
   };
 
@@ -103,8 +102,30 @@ const AdminList = () => {
 
       <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
         {loading ? (
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#003a65]"></div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full">
+              <thead className="bg-gray-100 text-gray-700 text-xs">
+                <tr>
+                  <th className="px-4 py-3 text-left font-semibold">
+                    Admin Name
+                  </th>
+                  <th className="px-4 py-3 text-left font-semibold">Email</th>
+                  <th className="px-4 py-3 text-left font-semibold"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                <SkeletonRow />
+                <SkeletonRow />
+                <SkeletonRow />
+                <SkeletonRow />
+                <SkeletonRow />
+                <SkeletonRow />
+                <SkeletonRow />
+                <SkeletonRow />
+                <SkeletonRow />
+                <SkeletonRow />
+              </tbody>
+            </table>
           </div>
         ) : error ? (
           <div className="text-red-600 text-sm p-4">{error}</div>
@@ -113,7 +134,9 @@ const AdminList = () => {
             <table className="min-w-full ">
               <thead className="bg-gray-100 text-gray-700 text-xs">
                 <tr>
-                  <th className="px-4 py-3 text-left font-semibold">Admin Name</th>
+                  <th className="px-4 py-3 text-left font-semibold">
+                    Admin Name
+                  </th>
                   <th className="px-4 py-3 text-left font-semibold">Email</th>
                   <th className="px-4 py-3 text-left font-semibold"></th>
                 </tr>
@@ -121,11 +144,15 @@ const AdminList = () => {
               <tbody className="divide-y divide-gray-200 text-xs sm:text-sm">
                 {admins.map((admin) => (
                   <tr key={admin._id} className="hover:bg-gray-50 transition">
-                    <td className="px-4 py-3 text-gray-800">{admin.userName}</td>
+                    <td className="px-4 py-3 text-gray-800">
+                      {admin.userName}
+                    </td>
                     <td className="px-4 py-3 text-gray-800">{admin.email}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-col sm:flex-row gap-2 justify-end">
-                        <SecondaryButton onClick={() => handleEdit(admin)}>Edit</SecondaryButton>
+                        <SecondaryButton onClick={() => handleEdit(admin)}>
+                          Edit
+                        </SecondaryButton>
                         <PrimaryButton onClick={() => handleDelete(admin)}>
                           {loadingId === admin._id ? (
                             <div className="flex items-center">

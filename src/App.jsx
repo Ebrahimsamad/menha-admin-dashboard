@@ -82,10 +82,10 @@ function App() {
               }
             />
             <Route
-             path="/addscholarship/*"
+              path="/addscholarship/*"
               element={
                 <ProtectedRoute>
-                 <AddScholarship />
+                  <AddScholarship />
                 </ProtectedRoute>
               }
             />

@@ -4,6 +4,23 @@ import PortfolioDetail from "./PortfolioDetail";
 import RepeatParagrah from "../ui/RepeatPara";
 import SecondaryButton from "../ui/SecondaryButton";
 
+const SkeletonRow = () => (
+  <tr className="animate-pulse">
+    <td className="px-4 py-3">
+      <div className="h-4 bg-gray-300 rounded w-12"></div>
+    </td>
+    <td className="px-4 py-3">
+      <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+    </td>
+    <td className="px-4 py-3">
+      <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+    </td>
+    <td className="px-4 py-3">
+      <div className="h-4 bg-gray-300 rounded w-1/4"></div>
+    </td>
+  </tr>
+);
+
 const PortfolioList = () => {
   const [portfolios, setPortfolios] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,30 +67,14 @@ const PortfolioList = () => {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-lg font-semibold text-gray-600">Loading...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-lg font-semibold text-red-500">
-          Error: 404 please check your network
-        </p>
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto p-6 min-h-screen">
+      {/* Portfolio title */}
       <RepeatParagrah>
         <h1 className="text-4xl text-start mb-6">Portfolios</h1>
       </RepeatParagrah>
 
+      {/* Filter */}
       {!selectedPortfolioId && (
         <div className="flex justify-end mb-6">
           <select
@@ -89,7 +90,42 @@ const PortfolioList = () => {
         </div>
       )}
 
-      {!selectedPortfolioId ? (
+      {/* Skeleton loader when loading */}
+      {loading ? (
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border border-gray-100 shadow-md rounded-lg">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="py-3 px-4 border-b text-left text-gray-600">
+                  Profile Image
+                </th>
+                <th className="py-3 px-4 border-b text-left text-gray-600">
+                  User Name
+                </th>
+                <th className="py-3 px-4 border-b text-left text-gray-600">
+                  Level Of Study
+                </th>
+                <th className="py-3 px-4 border-b text-left text-gray-600">
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...Array(5)].map((_, i) => (
+                <SkeletonRow key={i} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : error ? (
+        // Error display
+        <div className="flex justify-center items-center h-screen">
+          <p className="text-lg font-semibold text-red-500">
+            Error: 404 please check your network
+          </p>
+        </div>
+      ) : (
+        // Portfolios table
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-100 shadow-md rounded-lg">
             <thead>
@@ -159,7 +195,10 @@ const PortfolioList = () => {
             </tbody>
           </table>
         </div>
-      ) : (
+      )}
+
+      {/* Portfolio detail view */}
+      {selectedPortfolioId && (
         <div>
           <SecondaryButton onClick={handleBackClick}>
             Back to List
