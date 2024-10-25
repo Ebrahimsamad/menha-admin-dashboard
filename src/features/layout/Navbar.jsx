@@ -17,7 +17,7 @@ const Navbar = () => {
         {/* Logo */}
         <Link to="/admin" className="flex items-center space-x-4">
           <img
-            src="logo.png"
+            src="/logo.png"
             alt="Men7a Logo"
             className="w-24 h-12 md:w-40 md:h-8 object-contain"
           />
@@ -41,14 +41,14 @@ const Navbar = () => {
               Scholarships
             </NavLink>
           </li>
-          <li className="group">
+          {/* <li className="group">
             <NavLink
               to="/universities"
               className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
             >
               Universities
             </NavLink>
-          </li>
+          </li> */}
           <li className="group">
             <NavLink
               to="/portfolio"
@@ -130,14 +130,14 @@ const Navbar = () => {
             Scholarships
           </NavLink>
         </li>
-        <li className="group">
+        {/* <li className="group">
           <NavLink
             to="/universities"
             className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
           >
             Universities
           </NavLink>
-        </li>
+        </li> */}
         <li className="group">
           <NavLink
             to="/portfolio"

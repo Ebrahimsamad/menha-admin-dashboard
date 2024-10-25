@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { getAllModesOfStudy, deleteModeOfStudyById } from "../../services/modeservice";
+import {
+  getAllModesOfStudy,
+  deleteModeOfStudyById,
+} from "../../services/modeservice";
 import { toast } from "react-hot-toast";
-import Spinner from '../../ui/Spinner';
+import Spinner from "../../ui/Spinner";
 import RepeatParagraph from "../../ui/RepeatPara";
 import PrimaryButton from "../../ui/PrimaryButton";
 import SecondaryButton from "../../ui/SecondaryButton";
+import SkeletonRow from "../../ui/SkeletonRowTwo";
 
 const ModeOfStudy = () => {
   const [modesOfStudy, setModesOfStudy] = useState([]);
@@ -25,7 +29,7 @@ const ModeOfStudy = () => {
       setModesOfStudy(data);
       setError(null);
     } catch (error) {
-      setError('Failed to load modes of study. Please try again.');
+      setError("Failed to load modes of study. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -33,22 +37,22 @@ const ModeOfStudy = () => {
 
   const handleDelete = (mode) => {
     setConfirmDeleteId(mode._id);
-    setModeToDelete(mode.modeOfStudy); 
+    setModeToDelete(mode.modeOfStudy);
   };
 
   const deleteConfirmed = async (id) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     setLoadingId(id);
     try {
       await deleteModeOfStudyById(id, token);
-      setModesOfStudy(modesOfStudy.filter(mode => mode._id !== id));
-      toast.success('Mode of study deleted successfully!');
+      setModesOfStudy(modesOfStudy.filter((mode) => mode._id !== id));
+      toast.success("Mode of study deleted successfully!");
     } catch (error) {
-      toast.error('Failed to delete mode of study. Please try again.');
+      toast.error("Failed to delete mode of study. Please try again.");
     } finally {
       setConfirmDeleteId(null);
       setLoadingId(null);
-      setModeToDelete(null); 
+      setModeToDelete(null);
     }
   };
 
@@ -58,7 +62,8 @@ const ModeOfStudy = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full relative animate-fade-in">
             <h3 className="text-lg font-semibold mb-4 text-center text-[#003a65]">
-              Are you sure you want to delete the mode of study: <span className="  text-[#B92A3B]">{modeToDelete}</span>?
+              Are you sure you want to delete the mode of study:{" "}
+              <span className="  text-[#B92A3B]">{modeToDelete}</span>?
             </h3>
             <div className="flex justify-center space-x-4">
               <SecondaryButton
@@ -88,8 +93,21 @@ const ModeOfStudy = () => {
 
       <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
         {loading ? (
-          <div className="flex items-center justify-center h-64">
-            <Spinner />
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-100 shadow-md rounded-lg">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="py-3 px-4 border-b text-left text-gray-600">
+                    Mode Of Study
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...Array(3)].map((_, i) => (
+                  <SkeletonRow key={i} />
+                ))}
+              </tbody>
+            </table>
           </div>
         ) : error ? (
           <div className="text-red-600 text-sm p-4">{error}</div>
