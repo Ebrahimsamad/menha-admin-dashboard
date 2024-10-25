@@ -19,8 +19,10 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-const fetchUniversities = async () => {
-  const response = await axiosInstance.get("/");
+const fetchUniversities = async (page = 1, limit = 10) => {
+  const response = await axiosInstance.get(
+    `/pagination?page=${page}&limit=${limit}`
+  );
   return response.data;
 };
 

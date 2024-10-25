@@ -8,6 +8,7 @@ import Spinner from "../../ui/Spinner";
 import RepeatParagraph from "../../ui/RepeatPara";
 import PrimaryButton from "../../ui/PrimaryButton";
 import SecondaryButton from "../../ui/SecondaryButton";
+import SkeletonRow from "../../ui/SkeletonRowTwo";
 
 const FieldOfStudy = () => {
   const [fieldsOfStudy, setFieldsOfStudy] = useState([]);
@@ -59,7 +60,8 @@ const FieldOfStudy = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full relative animate-fade-in">
             <h3 className="text-lg font-semibold mb-4 text-center text-[#003a65] ">
               Are you sure you want to delete the field of study{" "}
-              <span className="text-[#B92A3B]">{confirmDeleteName}</span>? </h3>
+              <span className="text-[#B92A3B]">{confirmDeleteName}</span>?{" "}
+            </h3>
             <div className="flex justify-center space-x-4">
               <SecondaryButton onClick={() => deleteConfirmed(confirmDeleteId)}>
                 {loadingId === confirmDeleteId ? (
@@ -80,19 +82,38 @@ const FieldOfStudy = () => {
       )}
 
       <RepeatParagraph>
-        <h1 className="text-2xl sm:text-3xl mb-4 font-bold">Field of Study List</h1>
+        <h1 className="text-2xl sm:text-3xl mb-4 font-bold">
+          Field of Study List
+        </h1>
       </RepeatParagraph>
 
       {isLoading ? (
-        <div className="flex items-center justify-center h-64">
-          <Spinner />
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border border-gray-100 shadow-md rounded-lg">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="py-3 px-4 border-b text-left text-gray-600">
+                  Field of study
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...Array(8)].map((_, i) => (
+                <SkeletonRow key={i} />
+              ))}
+            </tbody>
+          </table>
         </div>
       ) : (
         <>
-          {error && <p className="text-red-600 text-sm p-4 text-center">{error}</p>}
+          {error && (
+            <p className="text-red-600 text-sm p-4 text-center">{error}</p>
+          )}
 
           {fieldsOfStudy.length === 0 ? (
-            <p className="text-gray-600 text-center">No fields of study available.</p>
+            <p className="text-gray-600 text-center">
+              No fields of study available.
+            </p>
           ) : (
             <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
               <div className="overflow-x-auto">
@@ -107,13 +128,21 @@ const FieldOfStudy = () => {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {fieldsOfStudy.map((field) => (
-                      <tr key={field._id} className="hover:bg-gray-50 transition">
+                      <tr
+                        key={field._id}
+                        className="hover:bg-gray-50 transition"
+                      >
                         <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-[#003a65]">
                           {field.fieldOfStudy}
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <PrimaryButton
-                            onClick={() => handleDeleteFieldOfStudy(field._id, field.fieldOfStudy)}
+                            onClick={() =>
+                              handleDeleteFieldOfStudy(
+                                field._id,
+                                field.fieldOfStudy
+                              )
+                            }
                             className={`text-red-600 hover:bg-red-100 ${
                               loadingId === field._id ? "opacity-50" : ""
                             }`}

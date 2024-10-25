@@ -66,7 +66,7 @@ function App() {
               }
             />
             <Route
-              path="/fieldofstudy"
+              path="/field-of-study"
               element={
                 <ProtectedRoute>
                   <Fieldofstudypage />
@@ -98,7 +98,7 @@ function App() {
               }
             />
             <Route
-              path="/CourseType"
+              path="/course-type"
               element={
                 <ProtectedRoute>
                   <CourseTypepage />

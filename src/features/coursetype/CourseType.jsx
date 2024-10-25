@@ -8,6 +8,7 @@ import Spinner from "../../ui/Spinner";
 import RepeatParagraph from "../../ui/RepeatPara";
 import PrimaryButton from "../../ui/PrimaryButton";
 import SecondaryButton from "../../ui/SecondaryButton";
+import SkeletonRow from "../../ui/SkeletonRowTwo";
 
 const CourseType = () => {
   const [courseTypes, setCourseTypes] = useState([]);
@@ -59,11 +60,11 @@ const CourseType = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full relative animate-fade-in">
             <h3 className="text-lg font-semibold mb-4 text-center text-[#003a65]">
-  Are you sure you want to delete the course type?
-</h3>
-<div className="text-lg font-semibold mb-4 text-center">
-  <span className="text-[#B92A3B]">{confirmDeleteName}</span>
-</div>
+              Are you sure you want to delete the course type?
+            </h3>
+            <div className="text-lg font-semibold mb-4 text-center">
+              <span className="text-[#B92A3B]">{confirmDeleteName}</span>
+            </div>
 
             <div className="flex justify-center space-x-4">
               <SecondaryButton
@@ -88,13 +89,28 @@ const CourseType = () => {
       )}
 
       <RepeatParagraph>
-        <h1 className="text-2xl sm:text-3xl mb-4 font-bold">Course Type List</h1>
+        <h1 className="text-2xl sm:text-3xl mb-4 font-bold">
+          Course Type List
+        </h1>
       </RepeatParagraph>
 
       <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
         {loading ? (
-          <div className="flex items-center justify-center h-64">
-            <Spinner />
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-100 shadow-md rounded-lg">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="py-3 px-4 border-b text-left text-gray-600">
+                    Course Type
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...Array(8)].map((_, i) => (
+                  <SkeletonRow key={i} />
+                ))}
+              </tbody>
+            </table>
           </div>
         ) : error ? (
           <div className="text-red-600 text-sm p-4">{error}</div>
