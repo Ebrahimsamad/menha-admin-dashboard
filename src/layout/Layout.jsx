@@ -19,14 +19,13 @@
 
 import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "../features/layout/Navbar";
-import Sidebar from "../features/layout/Sidebar"; // Import your sidebar component
+import Sidebar from "../features/layout/Sidebar";
 import { useAuth } from "../context/AuthContext";
 
 function Layout() {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
 
-  // Define the paths where you want the sidebar to be visible
   const showSidebar = [
     "/scholarships",
     "/universities",
@@ -43,7 +42,6 @@ function Layout() {
       <div className="flex">
         {isAuthenticated && showSidebar && <Sidebar />}
 
-        {/* Main Content */}
         <div className="flex-grow">
           <Outlet />
         </div>
