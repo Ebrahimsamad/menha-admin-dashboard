@@ -173,31 +173,6 @@ const Universities = () => {
                   ))}
                 </tbody>
               </table>
-
-              {/* Pagination Controls */}
-              <div className="flex justify-between mt-4">
-                <button
-                  className={`btn ${
-                    page === 1 ? "bg-gray-300" : "bg-[#003a65]"
-                  } text-white px-4 py-2 rounded`}
-                  onClick={handlePreviousPage}
-                  disabled={page === 1}
-                >
-                  Previous
-                </button>
-                <span className="text-sm text-gray-700">
-                  Page {page} of {totalPages}
-                </span>
-                <button
-                  className={`btn ${
-                    page === totalPages ? "bg-gray-300" : "bg-[#003a65]"
-                  } text-white px-4 py-2 rounded`}
-                  onClick={handleNextPage}
-                  disabled={page === totalPages}
-                >
-                  Next
-                </button>
-              </div>
             </>
           ) : (
             <div className="text-center py-4 text-gray-500">
@@ -206,6 +181,34 @@ const Universities = () => {
           )}
         </div>
       )}
+
+      <div className="flex justify-between mt-4">
+        <button
+          className={`btn ${
+            page === 1
+              ? "bg-gray-300 cursor-not-allowed"
+              : "text-white bg-[#003a65]"
+          }  px-4 py-2 rounded`}
+          onClick={handlePreviousPage}
+          disabled={page === 1}
+        >
+          Previous
+        </button>
+        <span className="text-sm  text-gray-700">
+          Page {page} of {totalPages}
+        </span>
+        <button
+          className={`btn ${
+            page === totalPages
+              ? "bg-gray-300 cursor-not-allowed"
+              : "text-white bg-[#003a65]"
+          }  px-4 py-2 rounded`}
+          onClick={handleNextPage}
+          disabled={page === totalPages}
+        >
+          Next
+        </button>
+      </div>
 
       <UniversityModal
         isOpen={isModalOpen}

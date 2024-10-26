@@ -163,8 +163,10 @@ const Scholarships = () => {
       <div className="flex justify-between mt-4">
         <button
           className={`btn ${
-            currentPage === 1 ? "bg-gray-300" : "bg-[#003a65]"
-          } text-white px-4 py-2 rounded`}
+            currentPage === 1
+              ? "bg-gray-300 cursor-not-allowed"
+              : "text-white bg-[#003a65]"
+          }  px-4 py-2 rounded`}
           onClick={handlePreviousPage}
           disabled={currentPage === 1}
         >
@@ -175,8 +177,10 @@ const Scholarships = () => {
         </span>
         <button
           className={`btn ${
-            currentPage === totalPages ? "bg-gray-300" : "bg-[#003a65]"
-          } text-white px-4 py-2 rounded`}
+            currentPage === totalPages
+              ? "bg-gray-300 cursor-not-allowed"
+              : "text-white  bg-[#003a65]"
+          } px-4 py-2 rounded`}
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
         >
