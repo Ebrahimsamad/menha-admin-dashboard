@@ -258,7 +258,7 @@ export default function AddScholarship() {
           {location.pathname !== "/addscholarship/submitted" && (
             <RepeatPara>
               <h3 className=" text-3xl text-center sm:text-xl md:text-6xl">
-                New Portfolio
+                New Scholarship
               </h3>
             </RepeatPara>
           )}

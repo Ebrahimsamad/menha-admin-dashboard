@@ -23,7 +23,7 @@ export default function Submitted() {
         </h4>
       
         <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-          <Link to="/scholarship">
+          <Link to="/scholarships">
             <PrimaryButton className="btn btn-primary bg-yellow-400 text-[#003a65] hover:bg-yellow-300">
               VIEW SCHOLARSHIPS
             </PrimaryButton>
