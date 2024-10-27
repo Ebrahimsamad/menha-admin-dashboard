@@ -11,11 +11,12 @@ const fetchScholarships = async (page = 1, size = 10) => {
 
 // Search scholarships by title and university
 const fetchScholarshipsSearch = async (query) => {
-  const { title, university } = query;
+  const { title, university, page } = query;
   const params = new URLSearchParams();
 
   if (title) params.append("title", title);
   if (university) params.append("university", university);
+  if (page) params.append("page", page);
 
   try {
     const response = await axios.get(`${API_URL}/search?${params.toString()}`);

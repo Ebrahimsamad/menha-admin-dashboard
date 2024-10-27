@@ -140,8 +140,12 @@ const Login = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={isButtonDisabled}
-            className="w-full py-3 rounded-lg transition duration-300 bg-[#b92a3b] hover:bg-[#a02234] text-white flex justify-center items-center"
+            disabled={isButtonDisabled || loading}
+            className={`w-full py-3 rounded-lg transition duration-300 bg-[#b92a3b] hover:bg-[#a02234] text-white flex justify-center items-center ${
+              isButtonDisabled
+                ? "bg-gray-400 cursor-not-allowed hover:bg-gray-400"
+                : ""
+            }`}
           >
             {loading ? <Spinner /> : "Login"}
           </button>
