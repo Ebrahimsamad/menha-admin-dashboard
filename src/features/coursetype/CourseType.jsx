@@ -39,7 +39,7 @@ const CourseType = () => {
       return "The first letter must be capitalized.";
     }
 
-    if (/[\u0600-\u06FF]/.test(value)) { 
+    if (/[\u0600-\u06FF]/.test(value)) {
       return "The field must be in English.";
     }
 
@@ -51,10 +51,7 @@ const CourseType = () => {
       (type) => type._id === editCourseTypeId
     );
 
-    if (
-      currentCourseType &&
-      value.trim() === currentCourseType.courseType
-    ) {
+    if (currentCourseType && value.trim() === currentCourseType.courseType) {
       return "No changes made.";
     }
 
@@ -124,7 +121,7 @@ const CourseType = () => {
         { courseType: editCourseTypeValue.trim() },
         token
       );
-      
+
       setCourseTypes((prevTypes) =>
         prevTypes.map((type) =>
           type._id === editCourseTypeId
@@ -175,7 +172,10 @@ const CourseType = () => {
               Are you sure you want to delete this course type?
             </h3>
             <div className="flex justify-center space-x-4">
-              <SecondaryButton
+              <SecondaryButton onClick={() => setConfirmDeleteId(null)}>
+                Cancel
+              </SecondaryButton>
+              <PrimaryButton
                 onClick={() => deleteConfirmed(confirmDeleteId)}
                 disabled={loadingId === confirmDeleteId}
               >
@@ -187,9 +187,6 @@ const CourseType = () => {
                 ) : (
                   "Delete"
                 )}
-              </SecondaryButton>
-              <PrimaryButton onClick={() => setConfirmDeleteId(null)}>
-                Cancel
               </PrimaryButton>
             </div>
           </div>
@@ -211,7 +208,7 @@ const CourseType = () => {
                 value={editCourseTypeValue}
                 onChange={handleEditChange}
                 className={`border rounded-lg p-2 w-full ${
-                  validationError ? 'border-red-500' : 'border-gray-300'
+                  validationError ? "border-red-500" : "border-gray-300"
                 }`}
                 required
                 disabled={isSubmitting}
@@ -221,7 +218,7 @@ const CourseType = () => {
               )}
             </div>
             <div className="flex justify-center space-x-4 mt-4">
-            <SecondaryButton
+              <SecondaryButton
                 type="button"
                 onClick={() => {
                   setEditCourseTypeId(null);
@@ -233,7 +230,9 @@ const CourseType = () => {
               </SecondaryButton>
               <PrimaryButton
                 type="submit"
-                disabled={isSubmitting || validationError || !editCourseTypeValue.trim()}
+                disabled={
+                  isSubmitting || validationError || !editCourseTypeValue.trim()
+                }
               >
                 {isSubmitting ? (
                   <div className="flex items-center">
@@ -244,14 +243,15 @@ const CourseType = () => {
                   "Update"
                 )}
               </PrimaryButton>
-            
             </div>
           </form>
         </div>
       )}
 
       <RepeatParagraph>
-        <h1 className="text-3xl sm:text-6xl text-center mb-4">Course Type List</h1>
+        <h1 className="text-3xl sm:text-6xl text-center mb-4">
+          Course Type List
+        </h1>
       </RepeatParagraph>
 
       <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
@@ -291,21 +291,21 @@ const CourseType = () => {
                     <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-[#003a65]">
                       {type.courseType}
                     </td>
-                    <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <PrimaryButton
+                    <td className="px-4 py-4 whitespace-nowrap space-x-2 text-right text-sm font-medium">
+                      <SecondaryButton
                         className="text-blue-600 hover:text-blue-900"
                         onClick={() => handleEdit(type)}
                         disabled={isSubmitting}
                       >
                         Edit
-                      </PrimaryButton>
-                      <SecondaryButton
+                      </SecondaryButton>
+                      <PrimaryButton
                         className="text-red-600 hover:text-red-900 ml-4"
                         onClick={() => handleDelete(type._id, type.courseType)}
                         disabled={isSubmitting}
                       >
                         Delete
-                      </SecondaryButton>
+                      </PrimaryButton>
                     </td>
                   </tr>
                 ))}

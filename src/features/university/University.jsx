@@ -71,11 +71,11 @@ const Universities = () => {
   };
 
   const handlePreviousPage = () => {
-    setPage(prev => Math.max(1, prev - 1));
+    setPage((prev) => Math.max(1, prev - 1));
   };
 
   const handleNextPage = () => {
-    setPage(prev => Math.min(totalPages, prev + 1));
+    setPage((prev) => Math.min(totalPages, prev + 1));
   };
 
   return (
@@ -88,7 +88,9 @@ const Universities = () => {
       />
 
       <RepeatParagraph>
-        <h1 className="text-3xl sm:text-6xl text-center mb-4">Universities List</h1>
+        <h1 className="text-3xl sm:text-6xl text-center mb-4">
+          Universities List
+        </h1>
       </RepeatParagraph>
 
       {loading ? (
@@ -151,18 +153,18 @@ const Universities = () => {
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-right">
                       <div className="flex justify-end space-x-2">
-                        <PrimaryButton
+                        <SecondaryButton
                           onClick={() => handleEdit(university)}
                           className="p-3 text-blue-600 hover:bg-blue-100 rounded-full hover:shadow-md"
                         >
                           Edit
-                        </PrimaryButton>
-                        <SecondaryButton
+                        </SecondaryButton>
+                        <PrimaryButton
                           onClick={() => openDeleteModal(university)}
                           className="p-3 text-red-600 hover:bg-red-100 rounded-full hover:shadow-md"
                         >
                           Delete
-                        </SecondaryButton>
+                        </PrimaryButton>
                       </div>
                     </td>
                   </tr>

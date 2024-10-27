@@ -12,7 +12,7 @@ import SkeletonRow from "../../ui/SkeletonRowTwo";
 import { toast } from "react-hot-toast";
 
 const validateInput = (value) => {
-  if (typeof value !== 'string') {
+  if (typeof value !== "string") {
     return "The field must be a string.";
   }
 
@@ -20,7 +20,7 @@ const validateInput = (value) => {
     return "Field cannot be empty.";
   }
 
-  if (/[\u0600-\u06FF]/.test(value)) { 
+  if (/[\u0600-\u06FF]/.test(value)) {
     return "The field must be in English.";
   }
 
@@ -34,7 +34,6 @@ const validateInput = (value) => {
 
   return "";
 };
-
 
 const FieldOfStudy = () => {
   const [fieldsOfStudy, setFieldsOfStudy] = useState([]);
@@ -84,7 +83,6 @@ const FieldOfStudy = () => {
       setFieldsOfStudy(fieldsOfStudy.filter((field) => field._id !== id));
       toast.success("Field-of-study deleted successfully!");
     } catch {
-      
     } finally {
       setLoadingId(null);
       setConfirmDeleteId(null);
@@ -121,10 +119,16 @@ const FieldOfStudy = () => {
 
     setLoadingId(editFieldId);
     try {
-      await updateFieldOfStudy(editFieldId, { fieldOfStudy: editFieldName }, token);
+      await updateFieldOfStudy(
+        editFieldId,
+        { fieldOfStudy: editFieldName },
+        token
+      );
       setFieldsOfStudy((prevFields) =>
         prevFields.map((field) =>
-          field._id === editFieldId ? { ...field, fieldOfStudy: editFieldName } : field
+          field._id === editFieldId
+            ? { ...field, fieldOfStudy: editFieldName }
+            : field
         )
       );
       closeEditModal();
@@ -151,7 +155,7 @@ const FieldOfStudy = () => {
                   value={editFieldName}
                   onChange={handleEditChange}
                   className={`w-full p-2 border rounded transition-colors ${
-                    validationError ? 'border-red-500' : 'border-gray-300'
+                    validationError ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter field of study name"
                 />
@@ -190,10 +194,10 @@ const FieldOfStudy = () => {
               <span className="text-[#B92A3B]">{editFieldName}</span>?
             </h3>
             <div className="flex justify-center space-x-4">
-            <PrimaryButton onClick={() => setConfirmDeleteId(null)}>
+              <SecondaryButton onClick={() => setConfirmDeleteId(null)}>
                 Cancel
-              </PrimaryButton>
-              <SecondaryButton onClick={() => deleteConfirmed(confirmDeleteId)}>
+              </SecondaryButton>
+              <PrimaryButton onClick={() => deleteConfirmed(confirmDeleteId)}>
                 {loadingId === confirmDeleteId ? (
                   <div className="flex items-center">
                     <Spinner color={"#003a65"} />
@@ -202,8 +206,7 @@ const FieldOfStudy = () => {
                 ) : (
                   "Delete"
                 )}
-              </SecondaryButton>
-            
+              </PrimaryButton>
             </div>
           </div>
         </div>
@@ -256,22 +259,35 @@ const FieldOfStudy = () => {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {fieldsOfStudy.map((field) => (
-                      <tr key={field._id} className="hover:bg-gray-50 transition">
+                      <tr
+                        key={field._id}
+                        className="hover:bg-gray-50 transition"
+                      >
                         <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-[#003a65]">
                           {field.fieldOfStudy}
                         </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <PrimaryButton
-                            onClick={() => handleEditFieldOfStudy(field._id, field.fieldOfStudy)}
+                        <td className="px-4 py-4 space-x-2 whitespace-nowrap text-right text-sm font-medium">
+                          <SecondaryButton
+                            onClick={() =>
+                              handleEditFieldOfStudy(
+                                field._id,
+                                field.fieldOfStudy
+                              )
+                            }
                           >
                             Edit
-                          </PrimaryButton>
-                          <SecondaryButton
-                            onClick={() => handleDeleteFieldOfStudy(field._id, field.fieldOfStudy)}
+                          </SecondaryButton>
+                          <PrimaryButton
+                            onClick={() =>
+                              handleDeleteFieldOfStudy(
+                                field._id,
+                                field.fieldOfStudy
+                              )
+                            }
                             className="ml-4"
                           >
                             Delete
-                          </SecondaryButton>
+                          </PrimaryButton>
                         </td>
                       </tr>
                     ))}
