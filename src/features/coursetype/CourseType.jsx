@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   getAllCourseTypes,
   deleteCourseTypeById,
+  editCourseTypeById,
 } from "../../services/courseservice";
 import { toast } from "react-hot-toast";
 import Spinner from "../../ui/Spinner";
@@ -15,12 +16,60 @@ const CourseType = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
-  const [confirmDeleteName, setConfirmDeleteName] = useState(null);
+  const [editCourseTypeId, setEditCourseTypeId] = useState(null);
+  const [editCourseTypeValue, setEditCourseTypeValue] = useState("");
   const [loadingId, setLoadingId] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationError, setValidationError] = useState("");
 
   useEffect(() => {
     fetchCourseTypes();
   }, []);
+
+  const validateInput = (value) => {
+    if (typeof value !== "string") {
+      return "The field must be a string.";
+    }
+
+    if (!value.trim()) {
+      return "Field cannot be empty.";
+    }
+
+    if (value[0] !== value[0].toUpperCase()) {
+      return "The first letter must be capitalized.";
+    }
+
+    if (/[\u0600-\u06FF]/.test(value)) { 
+      return "The field must be in English.";
+    }
+
+    if (value.length < 5) {
+      return "Field must be at least 5 characters long.";
+    }
+
+    const currentCourseType = courseTypes.find(
+      (type) => type._id === editCourseTypeId
+    );
+
+    if (
+      currentCourseType &&
+      value.trim() === currentCourseType.courseType
+    ) {
+      return "No changes made.";
+    }
+
+    const nameExists = courseTypes.some(
+      (type) =>
+        type.courseType.toLowerCase() === value.trim().toLowerCase() &&
+        type._id !== editCourseTypeId
+    );
+
+    if (nameExists) {
+      return "This course type name already exists";
+    }
+
+    return "";
+  };
 
   const fetchCourseTypes = async () => {
     setLoading(true);
@@ -38,16 +87,79 @@ const CourseType = () => {
 
   const handleDelete = (id, name) => {
     setConfirmDeleteId(id);
-    setConfirmDeleteName(name);
+  };
+
+  const handleEdit = (courseType) => {
+    setEditCourseTypeId(courseType._id);
+    setEditCourseTypeValue(courseType.courseType);
+    setValidationError("");
+  };
+
+  const handleEditChange = (e) => {
+    const value = e.target.value;
+    setEditCourseTypeValue(value);
+    setValidationError(validateInput(value));
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+
+    if (isSubmitting) {
+      return;
+    }
+
+    const validationResult = validateInput(editCourseTypeValue);
+    if (validationResult) {
+      setValidationError(validationResult);
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    setLoadingId(editCourseTypeId);
+    setIsSubmitting(true);
+
+    try {
+      await editCourseTypeById(
+        editCourseTypeId,
+        { courseType: editCourseTypeValue.trim() },
+        token
+      );
+      
+      setCourseTypes((prevTypes) =>
+        prevTypes.map((type) =>
+          type._id === editCourseTypeId
+            ? { ...type, courseType: editCourseTypeValue.trim() }
+            : type
+        )
+      );
+      setEditCourseTypeId(null);
+      setValidationError("");
+      toast.success("Course Type updated successfully!");
+    } catch (error) {
+      console.error("Error updating course type:", error);
+      toast.error("Failed to update course type. Please try again.");
+    } finally {
+      setLoadingId(null);
+      setIsSubmitting(false);
+    }
   };
 
   const deleteConfirmed = async (id) => {
+    if (loadingId === id) {
+      return;
+    }
+
     const token = localStorage.getItem("token");
     setLoadingId(id);
     try {
       await deleteCourseTypeById(id, token);
-      setCourseTypes(courseTypes.filter((type) => type._id !== id));
-      toast.success("Course type deleted successfully!");
+      setCourseTypes((prevTypes) =>
+        prevTypes.filter((courseType) => courseType._id !== id)
+      );
+      toast.success("Course Type deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting course type:", error);
+      toast.error("Failed to delete course type. Please try again.");
     } finally {
       setConfirmDeleteId(null);
       setLoadingId(null);
@@ -60,12 +172,8 @@ const CourseType = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full relative animate-fade-in">
             <h3 className="text-lg font-semibold mb-4 text-center text-[#003a65]">
-              Are you sure you want to delete the course type?
+              Are you sure you want to delete this course type?
             </h3>
-            <div className="text-lg font-semibold mb-4 text-center">
-              <span className="text-[#B92A3B]">{confirmDeleteName}</span>
-            </div>
-
             <div className="flex justify-center space-x-4">
               <SecondaryButton
                 onClick={() => deleteConfirmed(confirmDeleteId)}
@@ -88,10 +196,62 @@ const CourseType = () => {
         </div>
       )}
 
+      {editCourseTypeId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <form
+            onSubmit={handleEditSubmit}
+            className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full relative animate-fade-in"
+          >
+            <h3 className="text-lg font-semibold mb-4 text-center text-[#003a65]">
+              Edit Course Type
+            </h3>
+            <div className="space-y-2">
+              <input
+                type="text"
+                value={editCourseTypeValue}
+                onChange={handleEditChange}
+                className={`border rounded-lg p-2 w-full ${
+                  validationError ? 'border-red-500' : 'border-gray-300'
+                }`}
+                required
+                disabled={isSubmitting}
+              />
+              {validationError && (
+                <div className="text-red-500 text-sm">{validationError}</div>
+              )}
+            </div>
+            <div className="flex justify-center space-x-4 mt-4">
+            <SecondaryButton
+                type="button"
+                onClick={() => {
+                  setEditCourseTypeId(null);
+                  setValidationError("");
+                }}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </SecondaryButton>
+              <PrimaryButton
+                type="submit"
+                disabled={isSubmitting || validationError || !editCourseTypeValue.trim()}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center">
+                    <Spinner color={"#003a65"} />
+                    <span className="ml-2">Updating...</span>
+                  </div>
+                ) : (
+                  "Update"
+                )}
+              </PrimaryButton>
+            
+            </div>
+          </form>
+        </div>
+      )}
+
       <RepeatParagraph>
-        <h1 className="text-2xl sm:text-3xl mb-4 font-bold">
-          Course Type List
-        </h1>
+        <h1 className="text-3xl sm:text-6xl text-center mb-4">Course Type List</h1>
       </RepeatParagraph>
 
       <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
@@ -133,18 +293,19 @@ const CourseType = () => {
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <PrimaryButton
-                        className="text-red-600 hover:text-red-900"
-                        onClick={() => handleDelete(type._id, type.courseType)}
+                        className="text-blue-600 hover:text-blue-900"
+                        onClick={() => handleEdit(type)}
+                        disabled={isSubmitting}
                       >
-                        {loadingId === type._id ? (
-                          <div className="flex items-center">
-                            <Spinner />
-                            <span className="ml-2">Processing...</span>
-                          </div>
-                        ) : (
-                          "Delete"
-                        )}
+                        Edit
                       </PrimaryButton>
+                      <SecondaryButton
+                        className="text-red-600 hover:text-red-900 ml-4"
+                        onClick={() => handleDelete(type._id, type.courseType)}
+                        disabled={isSubmitting}
+                      >
+                        Delete
+                      </SecondaryButton>
                     </td>
                   </tr>
                 ))}

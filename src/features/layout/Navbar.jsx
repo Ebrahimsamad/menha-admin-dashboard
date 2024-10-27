@@ -11,98 +11,103 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <div className="bg-[#003a65] text-white">
-      <nav className="container mx-auto flex justify-between items-center py-3 md:py-4">
-        {/* Logo */}
-        <Link to="/admin" className="flex items-center space-x-4">
-          <img
-            src="/logo.png"
-            alt="Men7a Logo"
-            className="w-24 h-12 md:w-40 md:h-8 object-contain"
-          />
-        </Link>
+      {/* Fixed Navbar */}
+      <nav className="fixed top-0 left-0 w-full bg-[#003a65] z-10">
+        <div className="container mx-auto flex justify-between items-center py-3 md:py-4">
+          {/* Logo */}
+          <Link to="/admin" className="flex items-center space-x-4">
+            <img
+              src="/logo.png"
+              alt="Men7a Logo"
+              className="w-24 h-12 md:w-40 md:h-8 object-contain"
+              loading="lazy"
+            />
+          </Link>
 
-        {/* Navigation Links for lg screens */}
-        <ul className="hidden lg:flex space-x-8 items-center">
-          <li className="group">
-            <NavLink
-              to="/admin"
-              className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
-            >
-              Admin
-            </NavLink>
-          </li>
-          <li className="group">
-            <NavLink
-              to="/scholarships"
-              className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
-            >
-              Scholarships
-            </NavLink>
-          </li>
-          {/* <li className="group">
-            <NavLink
-              to="/universities"
-              className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
-            >
-              Universities
-            </NavLink>
-          </li> */}
-          <li className="group">
-            <NavLink
-              to="/portfolio"
-              className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
-            >
-              Portfolio
-            </NavLink>
-          </li>
-        </ul>
-
-        {/* Authentication Links */}
-        <div className="hidden lg:flex space-x-4 items-center">
-          {isAuthenticated ? (
-            <>
-              <span className="text-white px-3 py-2 rounded-md">
-                {user?.userName || "Guest"}
-              </span>
-              <button
-                onClick={logout}
-                className="bg-[#b92a3b] text-white py-2 px-4 rounded-md transition-all duration-300 hover:bg-white hover:text-[#b92a3b]"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
+          <ul className="hidden lg:flex space-x-8 items-center">
+            <li className="group">
               <NavLink
-                to="/login"
+                to="/admin"
+                onClick={closeMenu}
                 className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
               >
-                Log In
+                Admin
               </NavLink>
-            </>
-          )}
-        </div>
+            </li>
+            <li className="group">
+              <NavLink
+                to="/scholarships"
+                onClick={closeMenu}
+                className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
+              >
+                Scholarships
+              </NavLink>
+            </li>
+            <li className="group">
+              <NavLink
+                to="/portfolio"
+                onClick={closeMenu}
+                className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
+              >
+                Portfolio
+              </NavLink>
+            </li>
+          </ul>
 
-        {/* Burger Menu Icon for mobile and medium devices */}
-        <div className="lg:hidden flex items-center">
-          <button
-            onClick={toggleMenu}
-            className="text-white focus:outline-none"
-          >
-            {isMenuOpen ? (
-              <FiX
-                size={28}
-                className="hover:text-[#b92a3b] transition-colors"
-              />
+          <div className="hidden lg:flex space-x-4 items-center">
+            {isAuthenticated ? (
+              <>
+                <span className="text-white px-3 py-2 rounded-md">
+                  {user?.userName || "Guest"}
+                </span>
+                <button
+                  onClick={logout}
+                  className="bg-[#b92a3b] text-white py-2 px-4 rounded-md transition-all duration-300 hover:bg-white hover:text-[#b92a3b]"
+                >
+                  Logout
+                </button>
+              </>
             ) : (
-              <FiMenu
-                size={28}
-                className="hover:text-[#b92a3b] transition-colors"
-              />
+              <>
+                <NavLink
+                  to="/login"
+                  onClick={closeMenu}
+                  className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
+                >
+                  Log In
+                </NavLink>
+              </>
             )}
-          </button>
+          </div>
+
+          <div className="lg:hidden flex items-center">
+            <button
+              onClick={toggleMenu}
+              className="text-white focus:outline-none"
+              aria-label="Toggle Menu"
+              aria-expanded={isMenuOpen}
+            >
+              {isMenuOpen ? (
+                <FiX
+                  size={28}
+                  className="hover:text-[#b92a3b] transition-colors"
+                  aria-label="Close Menu"
+                />
+              ) : (
+                <FiMenu
+                  size={28}
+                  className="hover:text-[#b92a3b] transition-colors"
+                  aria-label="Open Menu"
+                />
+              )}
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -117,6 +122,7 @@ const Navbar = () => {
         <li className="group">
           <NavLink
             to="/admin"
+            onClick={closeMenu}
             className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
           >
             Admin
@@ -125,22 +131,16 @@ const Navbar = () => {
         <li className="group">
           <NavLink
             to="/scholarships"
+            onClick={closeMenu}
             className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
           >
             Scholarships
           </NavLink>
         </li>
-        {/* <li className="group">
-          <NavLink
-            to="/universities"
-            className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
-          >
-            Universities
-          </NavLink>
-        </li> */}
         <li className="group">
           <NavLink
             to="/portfolio"
+            onClick={closeMenu}
             className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
           >
             Portfolio
@@ -169,6 +169,7 @@ const Navbar = () => {
             <li className="group">
               <NavLink
                 to="/login"
+                onClick={closeMenu}
                 className="hover:bg-[#b92a3b] hover:text-white transition-all duration-300 px-3 py-2 rounded-md"
               >
                 Log In
@@ -177,6 +178,8 @@ const Navbar = () => {
           </>
         )}
       </ul>
+
+      <div className="container mx-auto pt-16"></div>
     </div>
   );
 };

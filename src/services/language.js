@@ -34,22 +34,42 @@ export const addLanguage = async (newLanguage) => {
   }
 };
 
-export const deleteLanguage = async (id, token) => {
+export const editLanguage = async (id, updatedLanguage, token) => {
   try {
-      const response = await fetch(`${API_URL}/language/${id}`, {
-          method: 'DELETE',
-          headers: {
-              'Authorization': `Bearer ${token}`, 
-          },
-      });
-      if (!response.ok) {
-          throw new Error('Failed to delete language');
-      }
-      const data = await response.json();
-      return data;
+    const response = await fetch(`${API_URL}/language/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(updatedLanguage),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update language');
+    }
+    const data = await response.json();
+    return data;
   } catch (error) {
-      console.error('Error deleting language:', error);
-      throw error;
+    console.error('Error updating language:', error);
+    throw error;
   }
 };
 
+export const deleteLanguage = async (id, token) => {
+  try {
+    const response = await fetch(`${API_URL}/language/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Failed to delete language');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error deleting language:', error);
+    throw error;
+  }
+};
