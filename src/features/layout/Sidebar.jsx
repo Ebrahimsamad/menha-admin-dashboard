@@ -87,7 +87,6 @@
 // );
 
 // export default Sidebar;
-
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
@@ -110,15 +109,10 @@ const Sidebar = ({ children }) => {
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 transform ${
+        className={`fixed inset-y-0 left-0 z-40 transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 transition-transform duration-300 ease-in-out w-64 bg-[#003a65] text-white p-6 shadow-lg`}
+        } md:translate-x-0 transition-transform duration-300 ease-in-out w-64 bg-[#003a65] text-white p-6 shadow-lg mt-16`} // Added mt-16
       >
-        {/* Logo */}
-        <Link to="/admin" className="flex justify-center mb-8">
-          <img src="/logo.png" alt="Logo" className="w-24 h-12 h-auto" />
-        </Link>
-
         {/* Sidebar Links */}
         <ul className="space-y-4 overflow-y-auto h-[80%] custom-scrollbar">
           <SidebarLink to="/scholarships" icon={<FaGraduationCap />}>
@@ -152,7 +146,7 @@ const Sidebar = ({ children }) => {
 
       {/* Main Content */}
       <div
-        className={`flex-1 p-6 bg-gray-100 transition-all duration-300 ease-in-out ${
+        className={`flex-1 p-6  transition-all duration-300 ease-in-out ${
           isOpen ? "opacity-50 md:opacity-100" : "opacity-100"
         } ${isOpen ? "pointer-events-none md:pointer-events-auto" : ""} ${
           isOpen ? "ml-0" : "ml-0 md:ml-64"
@@ -171,7 +165,7 @@ const Sidebar = ({ children }) => {
       {/* Overlay for Mobile */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
           onClick={toggleSidebar}
         />
       )}
@@ -193,3 +187,4 @@ const SidebarLink = ({ to, icon, children }) => (
 );
 
 export default Sidebar;
+

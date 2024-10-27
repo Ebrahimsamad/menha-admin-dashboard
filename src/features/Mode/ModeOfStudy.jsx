@@ -88,7 +88,7 @@ const ModeOfStudy = () => {
       )}
 
       <RepeatParagraph>
-        <h1 className="text-2xl sm:text-3xl mb-4 font-bold">Modes of Study</h1>
+        <h1 className="text-3xl sm:text-6xl text-center mb-4">Modes of Study</h1>
       </RepeatParagraph>
 
       <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">

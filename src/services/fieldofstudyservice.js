@@ -14,6 +14,7 @@ export const getAllFieldOfStudy = async () => {
   }
 };
 
+
 export const deleteFieldOfStudy = async (id, token) => {
   try {
     const response = await fetch(`${API_URL}/field-of-study/${id}`, {
@@ -29,6 +30,27 @@ export const deleteFieldOfStudy = async (id, token) => {
     return data;
   } catch (error) {
     console.error('Error deleting field of study:', error);
+    throw error;
+  }
+};
+
+export const updateFieldOfStudy = async (id, updatedData, token) => {
+  try {
+    const response = await fetch(`${API_URL}/field-of-study/${id}`, {
+      method: 'PATCH', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, 
+      },
+      body: JSON.stringify(updatedData), 
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update field of study');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error updating field of study:', error);
     throw error;
   }
 };

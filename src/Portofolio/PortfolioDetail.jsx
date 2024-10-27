@@ -59,34 +59,35 @@ const PortfolioDetail = ({ portfolio, updatePortfolioStatus }) => {
 
   return (
     <div className="p-6 bg-white shadow-lg rounded-lg max-w-4xl mx-auto mt-8 border border-gray-200">
-      <div className="flex items-center mb-6">
-        <img
-          src={portfolio.userID.image}
-          alt="User Profile"
-          className="w-24 h-24 rounded-full mr-4 border-2"
-        />
-        <div>
-          <h2 className="text-3xl font-bold text-gray-800">
-            {portfolio.userID?.userName}
-          </h2>
-          <p className="text-gray-600">{portfolio.userID?.email}</p>
-          <span
-            className={`inline-block text-sm font-semibold px-3 py-1 rounded-full mt-2 ${
-              portfolio.isAccept
-                ? "bg-green-100 text-green-800"
-                : portfolio.isReject
-                ? "bg-red-100 text-red-800"
-                : "bg-yellow-100 text-yellow-800"
-            }`}
-          >
-            {portfolio.isAccept
-              ? "Accepted"
-              : portfolio.isReject
-              ? "Rejected"
-              : "Pending"}
-          </span>
-        </div>
-      </div>
+      <div className="flex flex-col md:flex-row items-center mb-6">
+  <img
+    src={portfolio.userID.image}
+    alt="User Profile"
+    className="w-20 h-20 md:w-24 md:h-24 rounded-full mb-4 md:mb-0 md:mr-4 border-2"
+  />
+  <div className="text-center md:text-left">
+    <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+      {portfolio.userID?.userName}
+    </h2>
+    <p className="text-gray-600">{portfolio.userID?.email}</p>
+    <span
+      className={`inline-block text-sm font-semibold px-3 py-1 rounded-full mt-2 ${
+        portfolio.isAccept
+          ? "bg-green-100 text-green-800"
+          : portfolio.isReject
+          ? "bg-red-100 text-red-800"
+          : "bg-yellow-100 text-yellow-800"
+      }`}
+    >
+      {portfolio.isAccept
+        ? "Accepted"
+        : portfolio.isReject
+        ? "Rejected"
+        : "Pending"}
+    </span>
+  </div>
+</div>
+
       <RepeatParagrah>
         <h3 className="text-3xl">Personal Information</h3>
       </RepeatParagrah>
@@ -193,6 +194,7 @@ const PortfolioDetail = ({ portfolio, updatePortfolioStatus }) => {
       <div className="flex justify-end space-x-2 mt-4">
         {!portfolio.isAccept && !portfolio.isReject && (
           <>
+          
             <SecondaryButton onClick={handleAccept} disabled={loading}>
               {loading ? (
                 <div className=" flex items-center ">
@@ -203,12 +205,7 @@ const PortfolioDetail = ({ portfolio, updatePortfolioStatus }) => {
                 "Accept"
               )}
             </SecondaryButton>
-            <PrimaryButton
-              onClick={() => setShowRejectReasonModal(true)}
-              disabled={loading}
-            >
-              Reject
-            </PrimaryButton>
+           
           </>
         )}
       </div>

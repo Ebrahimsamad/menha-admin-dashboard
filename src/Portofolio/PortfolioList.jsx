@@ -69,10 +69,26 @@ const PortfolioList = () => {
 
   return (
     <div className="container mx-auto p-6 min-h-screen">
-      {/* Portfolio Title */}
-      <RepeatParagrah>
-        <h1 className="text-4xl text-start mb-6">Portfolios</h1>
-      </RepeatParagrah>
+      {/* Header Section with Title and Back Button */}
+      <div className="flex justify-between mb-4">
+  <div className="flex-shrink-0">
+    {selectedPortfolioId && (
+      <SecondaryButton onClick={handleBackClick}>
+        Back to List
+      </SecondaryButton>
+    )}
+  </div>
+  <div className="flex-grow text-center">
+    <RepeatParagrah>
+      <h1 className="text-3xl sm:text-6xl">
+        Portfolios
+      </h1>
+    </RepeatParagrah>
+  </div>
+  <div className="flex-shrink-0 hidden sm:block">
+  </div>
+</div>
+
 
       {/* Filter Section */}
       {!selectedPortfolioId && (
@@ -90,7 +106,7 @@ const PortfolioList = () => {
         </div>
       )}
 
-      {/* Skeleton Loader when loading */}
+      {/* Skeleton Loader */}
       {loading ? (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-100 shadow-md rounded-lg">
@@ -196,17 +212,10 @@ const PortfolioList = () => {
               </table>
             </div>
           ) : (
-            <div>
-              <SecondaryButton onClick={handleBackClick}>
-                Back to List
-              </SecondaryButton>
-              <PortfolioDetail
-                portfolio={portfolios.find(
-                  (p) => p._id === selectedPortfolioId
-                )}
-                updatePortfolioStatus={updatePortfolioStatus}
-              />
-            </div>
+            <PortfolioDetail
+              portfolio={portfolios.find((p) => p._id === selectedPortfolioId)}
+              updatePortfolioStatus={updatePortfolioStatus}
+            />
           )}
         </>
       )}
