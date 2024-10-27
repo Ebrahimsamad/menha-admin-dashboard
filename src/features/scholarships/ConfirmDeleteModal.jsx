@@ -3,17 +3,24 @@ import SecondaryButton from "../../ui/SecondaryButton";
 import PrimaryButton from "../../ui/PrimaryButton";
 import Spinner from "../../ui/Spinner";
 
-const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, confirmDeleteName, confirmDeleteId, loadingId, setLoadingId }) => {
+const ConfirmDeleteModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  confirmDeleteName,
+  confirmDeleteId,
+  loadingId,
+  setLoadingId,
+}) => {
   if (!isOpen) return null;
 
   const handleConfirm = () => {
-    if (loadingId === confirmDeleteId) return; 
+    if (loadingId === confirmDeleteId) return;
     setLoadingId(confirmDeleteId);
-    onConfirm(confirmDeleteId)
-      .finally(() => {
-        setLoadingId(null);
-        onClose();
-      });
+    onConfirm(confirmDeleteId).finally(() => {
+      setLoadingId(null);
+      onClose();
+    });
   };
 
   return (
@@ -27,12 +34,10 @@ const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, confirmDeleteName, con
         </div>
 
         <div className="flex justify-center space-x-4">
-        <PrimaryButton onClick={onClose}>
-            Cancel
-          </PrimaryButton>
-          <SecondaryButton
+          <SecondaryButton onClick={onClose}>Cancel</SecondaryButton>
+          <PrimaryButton
             onClick={handleConfirm}
-            disabled={loadingId === confirmDeleteId} 
+            disabled={loadingId === confirmDeleteId}
           >
             {loadingId === confirmDeleteId ? (
               <div className="flex items-center">
@@ -42,8 +47,7 @@ const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, confirmDeleteName, con
             ) : (
               "Delete"
             )}
-          </SecondaryButton>
-        
+          </PrimaryButton>
         </div>
       </div>
     </div>
