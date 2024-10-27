@@ -175,7 +175,7 @@ const Sidebar = ({ children, isAuthenticated, user, logout }) => {
 
       {/* Main Content */}
       <div
-        className={`flex-1 bg-gray-100 transition-all duration-300 ease-in-out ml-0 md:ml-64 ${
+        className={`flex-1  transition-all duration-300 ease-in-out ml-0 md:ml-64 ${
           isOpen ? "ml-60" : ""
         }`}
       >
