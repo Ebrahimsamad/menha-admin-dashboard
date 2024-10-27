@@ -17,13 +17,21 @@ const Scholarships = () => {
   const [loadingId, setLoadingId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [searchTitle, setSearchTitle] = useState("");
+  const [searchUniversity, setSearchUniversity] = useState("");
   const pageSize = 10;
 
-  const fetchScholarships = async (page) => {
+  // Fetch scholarships based on current page and search filters
+  const fetchScholarships = async (page, title, university) => {
     setLoading(true);
     setError("");
     try {
-      const data = await ScholarshipService.fetchScholarships(page, pageSize);
+      const data = await ScholarshipService.fetchScholarshipsSearch({
+        title,
+        university,
+        page,
+        size: pageSize,
+      });
       setScholarships(data.scholarships);
       setTotalPages(data.pagination.totalPages);
     } catch (err) {
@@ -33,24 +41,42 @@ const Scholarships = () => {
     }
   };
 
+  // Fetch scholarships whenever currentPage, searchTitle, or searchUniversity changes
   useEffect(() => {
-    fetchScholarships(currentPage);
-  }, [currentPage]);
+    fetchScholarships(currentPage, searchTitle, searchUniversity);
+  }, [currentPage, searchTitle, searchUniversity]);
 
+  // Handle scholarship deletion
   const handleDelete = async (scholarshipId) => {
     setLoadingId(scholarshipId);
     try {
       await ScholarshipService.deleteScholarship(scholarshipId);
       toast.success("Scholarship deleted successfully");
-      fetchScholarships(currentPage);
+      fetchScholarships(currentPage, searchTitle, searchUniversity);
     } catch (err) {
-      const errorMessage = err.response?.data?.message || err.message || "Failed to delete scholarship.";
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to delete scholarship.";
       toast.error(errorMessage);
     } finally {
       setLoadingId(null);
     }
   };
 
+  // Update search title and reset currentPage to 1
+  const handleSearchTitleChange = (e) => {
+    setSearchTitle(e.target.value);
+    setCurrentPage(1); // Reset to the first page on a new search
+  };
+
+  // Update search university and reset currentPage to 1
+  const handleSearchUniversityChange = (e) => {
+    setSearchUniversity(e.target.value);
+    setCurrentPage(1); // Reset to the first page on a new search
+  };
+
+  // Pagination controls
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -66,9 +92,29 @@ const Scholarships = () => {
   return (
     <div className="container mx-auto p-6">
       <RepeatParagrah>
-        <h1 className="text-3xl sm:text-6xl text-center mb-4">Scholarships List</h1>
+        <h1 className="text-3xl sm:text-6xl text-center mb-4">
+          Scholarships List
+        </h1>
       </RepeatParagrah>
-      <div className="flex justify-end mb-4">
+
+      {/* Search Inputs */}
+      <div className="flex justify-between items-center mb-4">
+        <input
+          type="text"
+          name="title"
+          placeholder="Search by title..."
+          value={searchTitle}
+          onChange={handleSearchTitleChange}
+          className="border border-gray-300 rounded-lg px-4 py-2 mr-4 w-full sm:w-1/3"
+        />
+        <input
+          type="text"
+          name="university"
+          placeholder="Search by university..."
+          value={searchUniversity}
+          onChange={handleSearchUniversityChange}
+          className="border border-gray-300 rounded-lg px-4 py-2 mr-4 w-full sm:w-1/3"
+        />
         {!loading && !error && (
           <Link
             to="/addscholarship"
@@ -85,7 +131,9 @@ const Scholarships = () => {
             <thead className="bg-gray-100 text-gray-700 text-xs">
               <tr>
                 <th className="px-4 py-3 text-left font-semibold">Title</th>
-                <th className="px-4 py-3 text-left font-semibold">University</th>
+                <th className="px-4 py-3 text-left font-semibold">
+                  University
+                </th>
                 <th className="px-4 py-3 text-left font-semibold"></th>
               </tr>
             </thead>
@@ -104,8 +152,12 @@ const Scholarships = () => {
             <table className="min-w-full leading-normal">
               <thead>
                 <tr>
-                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Title</th>
-                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">University</th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    Title
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    University
+                  </th>
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider"></th>
                 </tr>
               </thead>
@@ -116,15 +168,22 @@ const Scholarships = () => {
                       {scholarship.title || "N/A"}
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      {scholarship.universityId?.name || "N/A"}
+                      {scholarship.universityId?.name ||
+                        "University data unavailable"}
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       <div className="flex flex-col sm:flex-row gap-2 justify-end">
-                        <SecondaryButton onClick={() => alert(`Edit ${scholarship._id}`)}>Edit</SecondaryButton>
-                        <PrimaryButton onClick={() => {
-                          setSelectedScholarship(scholarship);
-                          setIsModalOpen(true);
-                        }}>
+                        <SecondaryButton
+                          onClick={() => alert(`Edit ${scholarship._id}`)}
+                        >
+                          Edit
+                        </SecondaryButton>
+                        <PrimaryButton
+                          onClick={() => {
+                            setSelectedScholarship(scholarship);
+                            setIsModalOpen(true);
+                          }}
+                        >
                           Delete
                         </PrimaryButton>
                       </div>
@@ -134,7 +193,9 @@ const Scholarships = () => {
               </tbody>
             </table>
           ) : (
-            <div className="text-center py-4 text-gray-500">No scholarships available at the moment.</div>
+            <div className="text-center py-4 text-gray-500">
+              No scholarships available at the moment.
+            </div>
           )}
         </div>
       )}
