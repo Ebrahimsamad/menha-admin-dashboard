@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Define the base URL for the scholarship API
-const API_URL = "http://menha-backend.vercel.app/scholarship";
+const API_URL = "https://menha-backend.vercel.app/scholarship";
 
 // Fetch scholarships with pagination
 const fetchScholarships = async (page = 1, size = 10) => {
