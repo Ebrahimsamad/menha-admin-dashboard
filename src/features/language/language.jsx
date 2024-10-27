@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getAllLanguages, deleteLanguage, editLanguage } from "../../services/language";
+import {
+  getAllLanguages,
+  deleteLanguage,
+  editLanguage,
+} from "../../services/language";
 import { toast } from "react-hot-toast";
 import Spinner from "../../ui/Spinner";
 import RepeatParagraph from "../../ui/RepeatPara";
@@ -8,7 +12,7 @@ import SecondaryButton from "../../ui/SecondaryButton";
 import SkeletonRow from "../../ui/SkeletonRowTwo";
 
 const validateLanguageName = (name, existingLanguages, currentId = null) => {
-  if (!name || typeof name !== 'string') {
+  if (!name || typeof name !== "string") {
     return "Language name must be a valid string.";
   }
 
@@ -18,7 +22,7 @@ const validateLanguageName = (name, existingLanguages, currentId = null) => {
     return "Language name cannot be empty.";
   }
 
-  if (/[\u0600-\u06FF]/.test(trimmedName)) { 
+  if (/[\u0600-\u06FF]/.test(trimmedName)) {
     return "The field must be in English.";
   }
 
@@ -39,8 +43,9 @@ const validateLanguageName = (name, existingLanguages, currentId = null) => {
   }
 
   const nameExists = existingLanguages.some(
-    lang => lang.name.toLowerCase() === trimmedName.toLowerCase() && 
-            lang._id !== currentId
+    (lang) =>
+      lang.name.toLowerCase() === trimmedName.toLowerCase() &&
+      lang._id !== currentId
   );
 
   if (nameExists) {
@@ -49,7 +54,6 @@ const validateLanguageName = (name, existingLanguages, currentId = null) => {
 
   return "";
 };
-
 
 const Language = () => {
   const [languages, setLanguages] = useState([]);
@@ -109,17 +113,21 @@ const Language = () => {
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (isProcessing) return;
 
     const trimmedName = editName.trim();
-    
+
     if (trimmedName === editingLanguage.name) {
-      setValidationError("No changes made.");  
+      setValidationError("No changes made.");
       return;
     }
 
-    const error = validateLanguageName(trimmedName, languages, editingLanguage._id);
+    const error = validateLanguageName(
+      trimmedName,
+      languages,
+      editingLanguage._id
+    );
     if (error) {
       setValidationError(error);
       return;
@@ -136,9 +144,13 @@ const Language = () => {
 
     try {
       await editLanguage(editingLanguage._id, { name: trimmedName }, token);
-      setLanguages(languages.map(lang =>
-        lang._id === editingLanguage._id ? { ...lang, name: trimmedName } : lang
-      ));
+      setLanguages(
+        languages.map((lang) =>
+          lang._id === editingLanguage._id
+            ? { ...lang, name: trimmedName }
+            : lang
+        )
+      );
       closeEditModal();
       toast.success("Language updated successfully!");
     } catch (err) {
@@ -196,7 +208,9 @@ const Language = () => {
                   onChange={handleEditChange}
                   disabled={isProcessing}
                   className={`w-full p-2 border rounded transition-colors ${
-                    validationError ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                    validationError
+                      ? "border-red-500 focus:ring-red-500"
+                      : "border-gray-300 focus:ring-blue-500"
                   } focus:outline-none focus:ring-2`}
                   placeholder="Enter language name"
                 />
@@ -205,9 +219,13 @@ const Language = () => {
                 )}
               </div>
               <div className="flex justify-center space-x-4">
-                <PrimaryButton 
-                  type="submit" 
-                  disabled={!!validationError || isProcessing || editName.trim() === editingLanguage.name}
+                <PrimaryButton
+                  type="submit"
+                  disabled={
+                    !!validationError ||
+                    isProcessing ||
+                    editName.trim() === editingLanguage.name
+                  }
                 >
                   {editingId === editingLanguage._id ? (
                     <div className="flex items-center">
@@ -218,8 +236,8 @@ const Language = () => {
                     "Update"
                   )}
                 </PrimaryButton>
-                <SecondaryButton 
-                  type="button" 
+                <SecondaryButton
+                  type="button"
                   onClick={closeEditModal}
                   disabled={isProcessing}
                 >
@@ -240,13 +258,13 @@ const Language = () => {
               <span className="text-[#B92A3B]">{languageToDelete.name}</span>?
             </h3>
             <div className="flex justify-center space-x-4">
-            <PrimaryButton 
+              <SecondaryButton
                 onClick={() => setConfirmDeleteId(null)}
                 disabled={isProcessing}
               >
                 Cancel
-              </PrimaryButton>
-              <SecondaryButton 
+              </SecondaryButton>
+              <PrimaryButton
                 onClick={() => deleteConfirmed(confirmDeleteId)}
                 disabled={isProcessing}
               >
@@ -258,8 +276,7 @@ const Language = () => {
                 ) : (
                   "Delete"
                 )}
-              </SecondaryButton>
-              
+              </PrimaryButton>
             </div>
           </div>
         </div>
@@ -275,8 +292,12 @@ const Language = () => {
             <table className="min-w-full bg-white border border-gray-100 shadow-md rounded-lg">
               <thead>
                 <tr className="bg-gray-100">
-                  <th className="py-3 px-4 border-b text-left text-gray-600">Language</th>
-                  <th className="py-3 px-4 border-b text-left text-gray-600">Actions</th>
+                  <th className="py-3 px-4 border-b text-left text-gray-600">
+                    Language
+                  </th>
+                  <th className="py-3 px-4 border-b text-left text-gray-600">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -304,13 +325,19 @@ const Language = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {languages.length === 0 ? (
                   <tr>
-                    <td colSpan="2" className="px-4 py-5 text-center text-gray-500">
+                    <td
+                      colSpan="2"
+                      className="px-4 py-5 text-center text-gray-500"
+                    >
                       No languages available
                     </td>
                   </tr>
                 ) : (
                   languages.map((language) => (
-                    <tr key={language._id} className="hover:bg-gray-50 transition">
+                    <tr
+                      key={language._id}
+                      className="hover:bg-gray-50 transition"
+                    >
                       <td className="px-4 py-5">
                         <h3 className="text-xl font-semibold text-[#003a65]">
                           {language.name}
@@ -318,13 +345,13 @@ const Language = () => {
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap text-right">
                         <div className="flex justify-end space-x-2">
-                          <PrimaryButton
+                          <SecondaryButton
                             onClick={() => handleEdit(language)}
                             disabled={isProcessing}
                           >
                             Edit
-                          </PrimaryButton>
-                          <SecondaryButton
+                          </SecondaryButton>
+                          <PrimaryButton
                             onClick={() => handleDelete(language._id)}
                             disabled={isProcessing}
                           >
@@ -336,7 +363,7 @@ const Language = () => {
                             ) : (
                               "Delete"
                             )}
-                          </SecondaryButton>
+                          </PrimaryButton>
                         </div>
                       </td>
                     </tr>
