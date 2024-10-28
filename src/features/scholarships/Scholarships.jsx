@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import SkeletonRow from "../../ui/SkeletonRowThree";
 import { Link } from "react-router-dom";
+import ScholarshipDetailsModal from "./ScholarshipDetailsModal";
 
 const Scholarships = () => {
   const [scholarships, setScholarships] = useState([]);
@@ -19,9 +20,10 @@ const Scholarships = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchTitle, setSearchTitle] = useState("");
   const [searchUniversity, setSearchUniversity] = useState("");
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [selectedScholarshipDetails, setSelectedScholarshipDetails] = useState(null);
   const pageSize = 10;
 
-  // Fetch scholarships based on current page and search filters
   const fetchScholarships = async (page, title, university) => {
     setLoading(true);
     setError("");
@@ -41,12 +43,10 @@ const Scholarships = () => {
     }
   };
 
-  // Fetch scholarships whenever currentPage, searchTitle, or searchUniversity changes
   useEffect(() => {
     fetchScholarships(currentPage, searchTitle, searchUniversity);
   }, [currentPage, searchTitle, searchUniversity]);
 
-  // Handle scholarship deletion
   const handleDelete = async (scholarshipId) => {
     setLoadingId(scholarshipId);
     try {
@@ -64,16 +64,21 @@ const Scholarships = () => {
     }
   };
 
-  // Update search title and reset currentPage to 1
+  const handleRowClick = (scholarship) => {
+    console.log(scholarship)
+    setSelectedScholarshipDetails(scholarship);
+    setIsDetailsModalOpen(true);
+  };
+
   const handleSearchTitleChange = (e) => {
     setSearchTitle(e.target.value);
-    setCurrentPage(1); // Reset to the first page on a new search
+    setCurrentPage(1);
   };
 
   // Update search university and reset currentPage to 1
   const handleSearchUniversityChange = (e) => {
     setSearchUniversity(e.target.value);
-    setCurrentPage(1); // Reset to the first page on a new search
+    setCurrentPage(1);
   };
 
   // Pagination controls
@@ -163,7 +168,11 @@ const Scholarships = () => {
               </thead>
               <tbody>
                 {scholarships.map((scholarship) => (
-                  <tr key={scholarship._id}>
+                  <tr 
+                    key={scholarship._id}
+                    className="cursor-pointer hover:bg-gray-200"
+                    onClick={() => handleRowClick(scholarship)}
+                  >
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       {scholarship.title || "N/A"}
                     </td>
@@ -174,12 +183,16 @@ const Scholarships = () => {
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       <div className="flex flex-col sm:flex-row gap-2 justify-end">
                         <SecondaryButton
-                          onClick={() => alert(`Edit ${scholarship._id}`)}
+                          onClick={(e) => {
+                            e.stopPropagation(); 
+                            alert(`Edit ${scholarship._id}`);
+                          }}
                         >
                           Edit
                         </SecondaryButton>
                         <PrimaryButton
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent row click
                             setSelectedScholarship(scholarship);
                             setIsModalOpen(true);
                           }}
@@ -229,6 +242,7 @@ const Scholarships = () => {
         </button>
       </div>
 
+      {/* Delete Confirmation Modal */}
       <ConfirmDeleteModal
         isOpen={isModalOpen}
         onClose={() => {
@@ -240,6 +254,16 @@ const Scholarships = () => {
         confirmDeleteId={selectedScholarship?._id}
         loadingId={loadingId}
         setLoadingId={setLoadingId}
+      />
+
+      {/* Scholarship Details Modal */}
+      <ScholarshipDetailsModal
+        isOpen={isDetailsModalOpen}
+        onClose={() => {
+          setIsDetailsModalOpen(false);
+          setSelectedScholarshipDetails(null);
+        }}
+        scholarship={selectedScholarshipDetails}
       />
     </div>
   );
