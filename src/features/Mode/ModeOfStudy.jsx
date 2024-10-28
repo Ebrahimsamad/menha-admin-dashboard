@@ -61,11 +61,14 @@ const ModeOfStudy = () => {
       {confirmDeleteId && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full relative animate-fade-in">
-            <h3 className="text-lg font-semibold mb-4 text-center text-[#003a65]">
+          <h3 className="text-lg font-semibold mb-4 text-center text-[#003a65]">
               Are you sure you want to delete the mode of study:{" "}
               <span className="  text-[#B92A3B]">{modeToDelete}</span>?
             </h3>
             <div className="flex justify-center space-x-4">
+            <PrimaryButton onClick={() => setConfirmDeleteId(null)}>
+                Cancel
+              </PrimaryButton>
               <SecondaryButton
                 onClick={() => deleteConfirmed(confirmDeleteId)}
                 disabled={loadingId === confirmDeleteId}
@@ -79,9 +82,7 @@ const ModeOfStudy = () => {
                   "Delete"
                 )}
               </SecondaryButton>
-              <PrimaryButton onClick={() => setConfirmDeleteId(null)}>
-                Cancel
-              </PrimaryButton>
+             
             </div>
           </div>
         </div>
@@ -125,8 +126,10 @@ const ModeOfStudy = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {modesOfStudy.map((mode) => (
                   <tr key={mode._id} className="hover:bg-gray-50 transition">
-                    <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <td className="px-4 py-5">
+                    <h3 className=" font-semibold text-[#003a65]">
                       {mode.modeOfStudy}
+                      </h3>
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <PrimaryButton

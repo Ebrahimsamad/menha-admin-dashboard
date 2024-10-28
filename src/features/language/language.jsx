@@ -339,7 +339,7 @@ const Language = () => {
                       className="hover:bg-gray-50 transition"
                     >
                       <td className="px-4 py-5">
-                        <h3 className="text-xl font-semibold text-[#003a65]">
+                        <h3 className=" font-semibold text-[#003a65]">
                           {language.name}
                         </h3>
                       </td>
