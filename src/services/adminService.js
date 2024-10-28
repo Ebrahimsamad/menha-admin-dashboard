@@ -78,7 +78,7 @@ const adminService = {
       });
 
       const data = await handleResponse(response);
-      console.log("Updated Admin: ", data);
+      
       return data.user;
     } catch (error) {
       throw error;

@@ -20,13 +20,7 @@ export default function AddScholarshipNavbar({
     <nav className="bg-white shadow-lg relative">
       <div className="container mx-auto p-4 flex flex-col lg:flex-row items-center justify-between">
         <div className="hidden lg:flex items-center w-full justify-between">
-          <Link to="/dashboard" className="flex items-center mb-4 lg:mb-0">
-            <img
-              src="/output-onlinepngtools.png"
-              alt="Men7a Logo"
-              className="w-24 h-12 md:w-40 md:h-8 object-contain"
-            />
-          </Link>
+          
 
           <div className="flex-grow flex justify-around bg-gray-100 p-4 rounded-lg shadow-md">
          
@@ -58,14 +52,14 @@ export default function AddScholarshipNavbar({
               className={`flex flex-col items-center space-y-2 ${
                 location.pathname.includes("ScholarShip-Form2")
                  ? "border-b-2 border-[#b92a3b] text-[#003a65] font-bold"
-                    : "text-[#003a65]"
+                    : `${isForm1Submitted?"text-[#003a65]":"text-gray-300"}`
               }`}
             >
               <div
                 className={`w-8 h-8 border-2 rounded-full flex items-center justify-center ${
                   isForm2Submitted
                     ? "bg-white border-[#003a65]"
-                    : "bg-[#003a65]"
+                    :`${isForm1Submitted?"bg-[#003a65]":"bg-gray-300"}`
                 }`}
               >
                 {isForm2Submitted && (
@@ -81,19 +75,19 @@ export default function AddScholarshipNavbar({
               className={`flex flex-col items-center space-y-2 ${
                 location.pathname.includes("university-Form")
                   ? "border-b-2 border-[#b92a3b] text-[#003a65] font-bold"
-                  : "text-[#003a65]"
+                  : `${isForm2Submitted?"text-[#003a65]":"text-gray-300"}`
               }`}
             >
               <div
                 className={`w-8 h-8 border-2 rounded-full flex items-center justify-center ${
                   isForm2Submitted
-                    ? "bg-white border-[#003a65]"
-                    :  "bg-[#003a65]"
+                    ? "bg-[#003a65] border-[#003a65]"
+                    :  `${isForm2Submitted?"bg-[#003a65]":"bg-gray-300"}`
                 }`}
               >
-                {isForm2Submitted && (
+                {/* {isForm2Submitted && (
                   <FaCheck className="text-[#003a65]" /> 
-                )}
+                )} */}
               </div>
               <span>University Form</span>
             </Link>

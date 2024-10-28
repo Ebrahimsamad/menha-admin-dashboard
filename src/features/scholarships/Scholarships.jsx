@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import SkeletonRow from "../../ui/SkeletonRowThree";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Scholarships = () => {
   const [scholarships, setScholarships] = useState([]);
@@ -18,6 +19,7 @@ const Scholarships = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const pageSize = 10;
+  const navigate = useNavigate();
 
   const fetchScholarships = async (page) => {
     setLoading(true);
@@ -67,6 +69,85 @@ const Scholarships = () => {
       setCurrentPage(currentPage - 1);
     }
   };
+  const handleEditPortfolio = (portfolio) => {
+    let gpa = "";
+    let gpaOption = "";
+    if (Number.isInteger(portfolio.gpa)) {
+      gpa += portfolio.gpa;
+    } else {
+      gpa += portfolio.gpa;
+    }
+    const form1Data = {
+      levelOfStudy: portfolio.levelOfStudy,
+      description: portfolio.description,
+      title: portfolio.title,
+      gpa,
+      gpaOption,
+      fieldOfStudy: portfolio.fieldOfStudyId._id,
+      courseType: portfolio.courseTypeId._id,
+      gender: portfolio.gender,
+      dateOfBirth: portfolio.dateOfBirthDate,
+      militaryStatusImageUrl: portfolio.militaryStatusImage,
+      graduationImageUrl: portfolio.graduationImage,
+      IDImageUrl: portfolio.IDImage,
+    };
+    let begining;
+    if (portfolio.isWinter) {
+      begining = "Winter";
+    } else {
+      begining = "Summer";
+    }
+    let funding;
+    if (portfolio.isFree) {
+      funding = "Free";
+    } else {
+      funding = "Not-Free";
+    }
+    let studyType;
+    if (portfolio.isFullTime) {
+      studyType = "Full-Time";
+    } else {
+      studyType = "Part-Time";
+    }
+    const courses = portfolio.languageId.course.join(", ");
+    const form2Data = {
+      country: portfolio.country,
+      duration: portfolio.duration,
+      beginning: begining,
+      funding: funding,
+      language: portfolio.languageId._id,
+      modeOfStudy: portfolio.modeOfStudyId._id,
+      studyType: studyType,
+      course: courses,
+    };
+    const universityAddress = portfolio.universityId.address;
+    const universityImage = portfolio.universityId.image;
+    const universityEmail = portfolio.universityId.email;
+    const universityFaculty = portfolio.universityId.faculityName;
+    const universityPageUrl = portfolio.universityId.pageUrl;
+
+    console.log(portfolio.universityId);
+
+    const universityData = {
+      universityName: portfolio.universityId._id,
+      universityAddress: universityAddress,
+      universityImage: universityImage,
+      universityEmail: universityEmail,
+      universityFaculty: universityFaculty,
+      universityPageUrl: universityPageUrl,
+    };
+
+    localStorage.setItem("form1Data", JSON.stringify(form1Data));
+    localStorage.setItem("form2Data", JSON.stringify(form2Data));
+    localStorage.setItem("universityData", JSON.stringify(universityData));
+    localStorage.setItem("editMode", "true");
+    localStorage.setItem("id", portfolio._id);
+    localStorage.setItem("isForm1Submitted", JSON.stringify(true));
+    localStorage.setItem("isForm2Submitted", JSON.stringify(true));
+    navigate(
+      `/addscholarship/ScholarShip-Form1?editMode=true&id=${portfolio._id}`
+    );
+  };
 
   return (
     <div className="container mx-auto p-6">
@@ -76,6 +157,15 @@ const Scholarships = () => {
       <div className="flex justify-end mb-4">
         {!loading && !error && (
           <Link
+            onClick={() => {
+              localStorage.removeItem("editMode");
+              localStorage.removeItem("id");
+              localStorage.removeItem("form1Data");
+              localStorage.removeItem("form2Data");
+              localStorage.removeItem("universityData");
+              localStorage.setItem("isForm1Submitted", JSON.stringify(false));
+              localStorage.setItem("isForm2Submitted", JSON.stringify(false));
+            }}
             to="/addscholarship"
             className="btn btn-primary py-2 text-center text-white px-4 rounded-lg shadow-md bg-[#003a65] hover:bg-[#002a4b] transition text-xs sm:text-sm"
           >
@@ -133,7 +223,7 @@ const Scholarships = () => {
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       <div className="flex flex-col sm:flex-row gap-2 justify-end">
                         <SecondaryButton
-                          onClick={() => alert(`Edit ${scholarship._id}`)}
+                          onClick={() => handleEditPortfolio(scholarship)}
                         >
                           Edit
                         </SecondaryButton>
@@ -159,7 +249,6 @@ const Scholarships = () => {
         </div>
       )}
 
-      {/* Pagination Controls */}
       <div className="flex justify-between mt-4">
         <button
           className={`btn ${

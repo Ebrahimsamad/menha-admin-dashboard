@@ -2,7 +2,6 @@
 const API_URL = 'https://menha-backend.vercel.app';
 export const AddFieldOfStudy =async (fieldOfStudy,token) => {
     try {
-      console.log("this is fieldofstudy",fieldOfStudy)
         const response = await fetch(`${API_URL}/field-of-study`, {
           method: 'POST',
           headers: {
@@ -14,7 +13,6 @@ export const AddFieldOfStudy =async (fieldOfStudy,token) => {
         
         if (!response.ok) {
           const errorData = await response.json();
-          console.log('Error response:', errorData);
       
           const errorMessage = errorData.message || 'Failed to add field of study';
           throw new Error(errorMessage);

@@ -2,7 +2,6 @@ const API_URL = 'https://menha-backend.vercel.app';
 
 export const adduniversity = async (universityFormData, token) => {
   try {
-    console.log("dddddddddddddddd",universityFormData)
     const response = await fetch(`${API_URL}/university`, {
       method: 'POST',
       headers: {
