@@ -1,30 +1,53 @@
 import React from "react";
+import SecondaryButton from "../../ui/SecondaryButton";
+import PrimaryButton from "../../ui/PrimaryButton";
+import Spinner from "../../ui/Spinner";
 
-const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm }) => {
+const ConfirmDeleteModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  confirmDeleteName,
+  confirmDeleteId,
+  loadingId,
+  setLoadingId,
+}) => {
   if (!isOpen) return null;
 
+  const handleConfirm = () => {
+    if (loadingId === confirmDeleteId) return;
+    setLoadingId(confirmDeleteId);
+    onConfirm(confirmDeleteId).finally(() => {
+      setLoadingId(null);
+      onClose();
+    });
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-1/3">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">
-          Confirm Delete
-        </h2>
-        <p className="text-gray-600 mb-4">
-          Are you sure you want to delete this scholarship?
-        </p>
-        <div className="flex justify-end">
-          <button
-            className="bg-[#b92a3b] hover:bg-[#a02234] text-white px-4 py-2 rounded mr-2"
-            onClick={onConfirm}
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full relative animate-fade-in">
+        <h3 className="text-lg font-semibold mb-4 text-center text-[#003a65]">
+          Are you sure you want to delete the course type?
+        </h3>
+        <div className="text-lg font-semibold mb-4 text-center">
+          <span className="text-[#B92A3B]">{confirmDeleteName}</span>
+        </div>
+
+        <div className="flex justify-center space-x-4">
+          <SecondaryButton onClick={onClose}>Cancel</SecondaryButton>
+          <PrimaryButton
+            onClick={handleConfirm}
+            disabled={loadingId === confirmDeleteId}
           >
-            Confirm
-          </button>
-          <button
-            className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
-            onClick={onClose}
-          >
-            Cancel
-          </button>
+            {loadingId === confirmDeleteId ? (
+              <div className="flex items-center">
+                <Spinner color={"#003a65"} />
+                <span className="ml-2">Deleting...</span>
+              </div>
+            ) : (
+              "Delete"
+            )}
+          </PrimaryButton>
         </div>
       </div>
     </div>

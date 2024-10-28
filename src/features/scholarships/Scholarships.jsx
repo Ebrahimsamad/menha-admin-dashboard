@@ -8,56 +8,82 @@ import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import SkeletonRow from "../../ui/SkeletonRowThree";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import ScholarshipDetailsModal from "./ScholarshipDetailsModal";
 
 const Scholarships = () => {
   const [scholarships, setScholarships] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedScholarshipId, setSelectedScholarshipId] = useState(null);
+  const [selectedScholarship, setSelectedScholarship] = useState(null);
+  const [loadingId, setLoadingId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
+  const [searchTitle, setSearchTitle] = useState("");
+  const [searchUniversity, setSearchUniversity] = useState("");
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [selectedScholarshipDetails, setSelectedScholarshipDetails] = useState(null);
   const pageSize = 10;
   const navigate = useNavigate();
 
-  const fetchScholarships = async (page) => {
+  const fetchScholarships = async (page, title, university) => {
     setLoading(true);
     setError("");
     try {
-      const data = await ScholarshipService.fetchScholarships(page, pageSize);
+      const data = await ScholarshipService.fetchScholarshipsSearch({
+        title,
+        university,
+        page,
+        size: pageSize,
+      });
       setScholarships(data.scholarships);
       setTotalPages(data.pagination.totalPages);
     } catch (err) {
-      setError("Failed to fetch scholarships");
+      setError("Failed to fetch scholarships. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchScholarships(currentPage);
-  }, [currentPage]);
+    fetchScholarships(currentPage, searchTitle, searchUniversity);
+  }, [currentPage, searchTitle, searchUniversity]);
 
-  const handleDelete = async () => {
-    setLoading(true);
+  const handleDelete = async (scholarshipId) => {
+    setLoadingId(scholarshipId);
     try {
-      await ScholarshipService.deleteScholarship(selectedScholarshipId);
+      await ScholarshipService.deleteScholarship(scholarshipId);
       toast.success("Scholarship deleted successfully");
-      fetchScholarships(currentPage);
+      fetchScholarships(currentPage, searchTitle, searchUniversity);
     } catch (err) {
-      console.error("Delete error details: ", err);
       const errorMessage =
         err.response?.data?.message ||
         err.message ||
-        "Failed to delete scholarship";
+        "Failed to delete scholarship.";
       toast.error(errorMessage);
     } finally {
-      setLoading(false);
-      setIsModalOpen(false);
+      setLoadingId(null);
     }
   };
 
+  const handleRowClick = (scholarship) => {
+    console.log(scholarship)
+    setSelectedScholarshipDetails(scholarship);
+    setIsDetailsModalOpen(true);
+  };
+
+  const handleSearchTitleChange = (e) => {
+    setSearchTitle(e.target.value);
+    setCurrentPage(1);
+  };
+
+  // Update search university and reset currentPage to 1
+  const handleSearchUniversityChange = (e) => {
+    setSearchUniversity(e.target.value);
+    setCurrentPage(1);
+  };
+
+  // Pagination controls
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -152,9 +178,29 @@ const Scholarships = () => {
   return (
     <div className="container mx-auto p-6">
       <RepeatParagrah>
-        <h1 className="text-2xl sm:text-3xl mb-4">Scholarships List</h1>
+        <h1 className="text-3xl sm:text-6xl text-center mb-4">
+          Scholarships List
+        </h1>
       </RepeatParagrah>
-      <div className="flex justify-end mb-4">
+
+      {/* Search Inputs */}
+      <div className="flex justify-between items-center mb-4">
+        <input
+          type="text"
+          name="title"
+          placeholder="Search by title..."
+          value={searchTitle}
+          onChange={handleSearchTitleChange}
+          className="border border-gray-300 rounded-lg px-4 py-2 mr-4 w-full sm:w-1/3"
+        />
+        <input
+          type="text"
+          name="university"
+          placeholder="Search by university..."
+          value={searchUniversity}
+          onChange={handleSearchUniversityChange}
+          className="border border-gray-300 rounded-lg px-4 py-2 mr-4 w-full sm:w-1/3"
+        />
         {!loading && !error && (
           <Link
             onClick={() => {
@@ -187,7 +233,7 @@ const Scholarships = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {[...Array(10)].map((_, i) => (
+              {[...Array(pageSize)].map((_, i) => (
                 <SkeletonRow key={i} />
               ))}
             </tbody>
@@ -210,26 +256,32 @@ const Scholarships = () => {
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider"></th>
                 </tr>
               </thead>
-
               <tbody>
                 {scholarships.map((scholarship) => (
-                  <tr key={scholarship._id}>
+                  <tr 
+                    key={scholarship._id}
+                    className="cursor-pointer hover:bg-gray-200"
+                    onClick={() => handleRowClick(scholarship)}
+                  >
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       {scholarship.title || "N/A"}
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      {scholarship.universityId?.name || "N/A"}
+                      {scholarship.universityId?.name ||
+                        "University data unavailable"}
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       <div className="flex flex-col sm:flex-row gap-2 justify-end">
                         <SecondaryButton
                           onClick={() => handleEditPortfolio(scholarship)}
+   
                         >
                           Edit
                         </SecondaryButton>
                         <PrimaryButton
-                          onClick={() => {
-                            setSelectedScholarshipId(scholarship._id);
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent row click
+                            setSelectedScholarship(scholarship);
                             setIsModalOpen(true);
                           }}
                         >
@@ -277,10 +329,28 @@ const Scholarships = () => {
         </button>
       </div>
 
+      {/* Delete Confirmation Modal */}
       <ConfirmDeleteModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedScholarship(null);
+        }}
         onConfirm={handleDelete}
+        confirmDeleteName={selectedScholarship?.title}
+        confirmDeleteId={selectedScholarship?._id}
+        loadingId={loadingId}
+        setLoadingId={setLoadingId}
+      />
+
+      {/* Scholarship Details Modal */}
+      <ScholarshipDetailsModal
+        isOpen={isDetailsModalOpen}
+        onClose={() => {
+          setIsDetailsModalOpen(false);
+          setSelectedScholarshipDetails(null);
+        }}
+        scholarship={selectedScholarshipDetails}
       />
     </div>
   );

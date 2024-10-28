@@ -43,14 +43,17 @@ const AdminEdit = ({ admin, onClose, onUpdate }) => {
     let newErrors = {};
 
     if (!userName.trim()) {
-      newErrors.userName = "Username is required";
-    } else if (!/^[a-zA-Z]/.test(userName)) {
+      newErrors.userName = "";
+  } else if (userName.length < 3) {
+      newErrors.userName = "Username must be at least 3 characters long";
+  } else if (!/^[a-zA-Z]/.test(userName)) {
       newErrors.userName = "Username must start with a letter";
-    }
+  }
+  
 
     const isValidEmail = /^\S+@gmail\.com$/.test(email);
     if (!email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = "";
     } else if (!isValidEmail) {
       newErrors.email = "Email is invalid, example@gmail.com";
     }
@@ -58,14 +61,14 @@ const AdminEdit = ({ admin, onClose, onUpdate }) => {
     const isValidPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
     if (!admin) {
       if (!password) {
-        newErrors.password = "Password is required";
+        newErrors.password = "";
       } else if (!isValidPassword) {
         newErrors.password = "Password must be at least 8 characters long and contain at least one letter and one number";
       }
 
-      if (password !== confirmPassword) {
+      if (password !== confirmPassword) { 
         newErrors.confirmPassword = "Passwords do not match";
-      }
+      } 
     } else {
       if (password && !isValidPassword) {
         newErrors.password = "Password must be at least 8 characters long and contain at least one letter and one number";

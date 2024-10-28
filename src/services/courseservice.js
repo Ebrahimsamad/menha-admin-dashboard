@@ -13,6 +13,26 @@ export const getAllCourseTypes = async () => {
     throw error;
   }
 };
+export const editCourseTypeById = async (id, data, token) => {
+  try {
+    const response = await fetch(`${API_URL}/course-type/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to edit course type');
+    }
+    const updatedData = await response.json();
+    return updatedData;
+  } catch (error) {
+    console.error('Error editing course type:', error);
+    throw error;
+  }
+};
 
 export const deleteCourseTypeById = async (id, token) => {
   try {

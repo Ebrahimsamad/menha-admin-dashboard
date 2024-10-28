@@ -26,14 +26,31 @@ const fetchUniversities = async (page = 1, limit = 10) => {
   return response.data;
 };
 
-const createUniversity = async (universityData) => {
-  const response = await axiosInstance.post("/", universityData);
+const createUniversity = async (formData) => {
+  const response = await axiosInstance.post("/", formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
   return response.data;
 };
 
-const editUniversity = async (id, universityData) => {
-  const response = await axiosInstance.put(`/${id}`, universityData);
-  return response.data;
+const editUniversity = async (id, formData) => {
+  try {
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
+
+    const response = await axiosInstance.patch(`/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || error.message;
+    throw new Error(`Failed to edit university: ${errorMessage}`);
+  }
 };
 
 const deleteUniversity = async (id) => {

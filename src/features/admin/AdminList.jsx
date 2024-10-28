@@ -58,7 +58,7 @@ const AdminList = () => {
       setAdmins(admins.filter((admin) => admin._id !== adminToDelete._id));
       toast.success("Admin deleted successfully");
     } catch (error) {
-      toast.error("Error deleting admin. Please try again.");
+    
     } finally {
       setShowDeleteConfirmation(false);
       setAdminToDelete(null);
@@ -86,7 +86,7 @@ const AdminList = () => {
   return (
     <div className="container mx-auto p-6">
       <RepeatPara>
-        <h1 className="text-2xl sm:text-3xl mb-4">Admin List</h1>
+        <h1 className="text-3xl sm:text-6xl text-center mb-4">Admin List</h1>
       </RepeatPara>
 
       <div className="flex justify-end mb-4">
@@ -181,6 +181,9 @@ const AdminList = () => {
               <span className="text-[#B92A3B]">{adminToDelete?.userName}</span>?
             </h3>
             <div className="flex justify-center space-x-4">
+            <PrimaryButton onClick={() => setShowDeleteConfirmation(false)}>
+                Cancel
+              </PrimaryButton>
               <SecondaryButton onClick={confirmDelete}>
                 {loadingId === confirmDeleteId ? (
                   <div className="flex items-center">
@@ -191,9 +194,7 @@ const AdminList = () => {
                   "Delete"
                 )}
               </SecondaryButton>
-              <PrimaryButton onClick={() => setShowDeleteConfirmation(false)}>
-                Cancel
-              </PrimaryButton>
+           
             </div>
           </div>
         </div>
