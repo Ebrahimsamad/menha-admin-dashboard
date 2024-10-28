@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import { addCourseType } from "../../services/AddScholarshipCourseType";
 import { AddFieldOfStudy } from "../../services/AddScholarshipFieldOfStudy";
@@ -13,6 +13,8 @@ export default function ScholarShipForm1({
   fieldsOfStudy,
   setCourseType,
   setFieldOfStudy,
+  setEditMode,
+  setId,
 }) {
   const [loading, setLoading] = useState(false);
   const [showOtherFieldOfStudy, setShowOtherFieldOfStudy] = useState(false);
@@ -27,6 +29,7 @@ export default function ScholarShipForm1({
 
   const [gpaOther, setGpaOther] = useState(false);
   const navigate = useNavigate();
+  
 
   const {
     register,
@@ -37,6 +40,27 @@ export default function ScholarShipForm1({
   } = useForm({
     mode: "onChange",
   });
+
+
+  const editMode = localStorage.getItem("editMode");
+  const idParam = localStorage.getItem("id");
+
+  useEffect(() => {
+    if (editMode) {
+      setEditMode(true); 
+    } else {
+      setEditMode(false);
+    }
+  }, [editMode, setEditMode]);
+
+  useEffect(() => {
+    if (idParam) {
+      setId(idParam); 
+    }
+  }, [ idParam, setId]);
+
+
+  
 
   useEffect(() => {
     const savedData = localStorage.getItem("form1Data");
@@ -49,13 +73,13 @@ export default function ScholarShipForm1({
   }, [setValue]);
   useEffect(() => {
     if (courseTypes.length > 0) {
-      // console.log("Updated Course Types:", courseTypes);
+     
     }
   }, [courseTypes]);
 
   useEffect(() => {
     if (fieldsOfStudy.length > 0) {
-      // console.log("Updated field of study:", fieldsOfStudy);
+     
     }
   }, [fieldsOfStudy]);
 
@@ -70,7 +94,7 @@ export default function ScholarShipForm1({
     onSubmitSuccess(data);
 
     try {
-      // console.log("Form Data:", data);
+     
 
       navigate("/addscholarship/ScholarShip-Form2");
     } catch (error) {
@@ -104,14 +128,12 @@ export default function ScholarShipForm1({
       setLoading(true);
       const token = localStorage.getItem("token");
 
-      console.log("Adding course type:", { courseType: courseTypeOther });
 
       const newCourseType = await addCourseType(
         { courseType: courseTypeOther },
         token
       );
 
-      // console.log("Newly added course type:", newCourseType);
 
       setCourseType((prevCourseTypes) => [
         ...prevCourseTypes,
@@ -121,10 +143,7 @@ export default function ScholarShipForm1({
         shouldValidate: true,
       });
 
-      // console.log("Newly added course type:", courseTypes);
-      // console.log(getValues());
-      // console.log("Newly added course type:", newCourseType);
-
+ 
       setShowOtherCourseType(false);
       setCourseTypeOther("");
       setShowAddButton(false);
@@ -153,7 +172,6 @@ export default function ScholarShipForm1({
   };
 
   const handleAddFieldOfStudy = async () => {
-    // console.log("fieldOfStudyOther:", fieldOfStudyOther);
     if (fieldOfStudyOther.trim() === "") {
       toast.error("Please enter a valid field of study.");
       return;
@@ -162,15 +180,12 @@ export default function ScholarShipForm1({
       setLoading(true);
       const token = localStorage.getItem("token");
 
-      console.log("Adding field of study:", {
-        fieldOfStudy: fieldOfStudyOther,
-      });
+      
       const newFieldOfStudy = await AddFieldOfStudy(
         { fieldOfStudy: fieldOfStudyOther },
         token
       );
 
-      // console.log("Newly added field of study:", newFieldOfStudy);
 
       setFieldOfStudy((prevFieldOfStudy) => [
         ...prevFieldOfStudy,
@@ -180,10 +195,7 @@ export default function ScholarShipForm1({
         shouldValidate: true,
       });
 
-      // console.log("Newly added Field of study:", fieldsOfStudy);
-      // console.log(getValues());
-
-      // console.log("Newly added Field of study:", newFieldOfStudy);
+      
 
       setShowOtherFieldOfStudy(false);
       setfieldOfStudyOther("");
@@ -230,7 +242,6 @@ export default function ScholarShipForm1({
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-12">
-        <Toaster />
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full">
           <form className="space-y-6">
             <div className="animate-pulse">
@@ -262,7 +273,6 @@ export default function ScholarShipForm1({
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-12">
-      <Toaster />
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex items-center">
@@ -284,12 +294,11 @@ export default function ScholarShipForm1({
                 message: "Title must be at least 3 characters",
               },
               pattern: {
-                value: /^[a-zA-Z]+$/,
-                message: "Title must only contain letters without spaces",
+                value: /^[a-zA-Z\s]+$/,
+                message: "Titel must only contain letters and spaces",
               },
               validate: {
-                noSpaces: (value) =>
-                  !/\s/.test(value) || "Title must not contain spaces",
+               
                 startsWithCapital: (value) =>
                   /^[A-Z]/.test(value) ||
                   "Title must start with a capital letter",
@@ -340,12 +349,60 @@ export default function ScholarShipForm1({
             <label className="text-[#8A690F] mr-2 font-medium text-xl">
               GPA (1 - 4)
             </label>
-            {errors.gpaOption ? (
+            {errors.gpaOption && errors.gpa? (
               <FaExclamationCircle className="text-red-600" />
             ) : (
               <FaCheckCircle className="text-green-600" />
             )}
           </div>
+          {editMode ? (
+
+   getValues("gpa") ? (
+   
+    <input
+      type="text"
+      {...register("gpa", {
+        required: "GPA is required",
+        min: { value: 1, message: "GPA must be between 1 and 5" },
+        max: { value: 5, message: "GPA must be between 1 and 5" },
+        pattern: {
+          value: /^[0-9]+(\.[0-9]{1,2})?$/,
+          message: "GPA must be a valid number",
+        },
+        onChange: (e) => {
+          const value = e.target.value;
+          setValue("gpa", value, { shouldValidate: true });
+          saveDataToLocalStorage();
+        }
+      })}
+      className="w-full px-4 py-2 border border-gray-300 rounded-md mt-2 focus:outline-[#003a65] focus:ring-[#003a65] focus:border-[#003a65]"
+      placeholder="Enter GPA"
+      defaultValue={getValues("gpa")}
+    />
+  ) : (
+ 
+    <input
+      type="text"
+      {...register("gpaOption", {
+        required: "GPA is required",
+        min: { value: 1, message: "GPA must be between 1 and 5" },
+        max: { value: 5, message: "GPA must be between 1 and 5" },
+        pattern: {
+          value: /^[0-9]+(\.[0-9]{1,2})?$/,
+          message: "GPA must be a valid number",
+        },
+        onChange: (e) => {
+          const value = e.target.value;
+          setValue("gpa", value, { shouldValidate: true })
+          saveDataToLocalStorage();
+        }
+      })}
+      className="w-full px-4 py-2 border border-gray-300 rounded-md mt-2 focus:outline-[#003a65] focus:ring-[#003a65] focus:border-[#003a65]"
+      placeholder="Enter GPA"
+      defaultValue={getValues("gpaOption")}
+    />
+  )
+) : (
           <select
             {...register("gpaOption", { required: "GPA is required" })}
             onChange={handleGpaChange}
@@ -359,7 +416,8 @@ export default function ScholarShipForm1({
             <option value="4">5</option>
             <option value="other">Other</option>
           </select>
-          {errors.gpaOption && (
+          )}
+          {errors.gpaOption && errors.gpa && (
             <p className="text-red-600">{errors.gpaOption.message}</p>
           )}
 
@@ -528,7 +586,20 @@ export default function ScholarShipForm1({
               )}
             </>
           )}
+            {editMode ? (
+        <button
+        type="submit"
+        disabled={!isValid || loading||showAddButton||showAddFieldButton}
+        className={`w-full py-3  text-white rounded-lg ${
+          isValid
+            ? "bg-[#003a65] hover:bg-[#002a4b]"
+            : "bg-blue-600 hover:bg-blue-700"
+        } disabled:bg-gray-400 focus:outline-none`}
+      >
+        {loading ? "editting..." : "Next"}
+      </button>
 
+) : (
           <button
             type="submit"
             disabled={!isValid || loading||showAddButton||showAddFieldButton}
@@ -538,8 +609,11 @@ export default function ScholarShipForm1({
                 : "bg-blue-600 hover:bg-blue-700"
             } disabled:bg-gray-400 focus:outline-none`}
           >
-            {loading ? "Submitting..." : "Submit"}
+            {loading ? "Submitting..." : "Next"}
           </button>
+          )}
+
+        
         </form>
       </div>
     </div>

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import { adduniversity } from "./../../services/AddUniversity";
 import LazyLoad from "react-lazyload";
@@ -11,7 +11,13 @@ export default function UniversityForm({
   onSubmitSuccess,
   university,
   setUniversity,
+  isForm1Submitted,
+  isForm2Submitted,
 }) {
+  
+  const editMode = localStorage.getItem("editMode");
+  const idParam = localStorage.getItem("id");
+
   const [loading, setLoading] = useState(false);
   const [selectedUniversityData, setSelectedUniversityData] = useState(null);
   const navigate = useNavigate();
@@ -20,7 +26,12 @@ export default function UniversityForm({
   const [selectedFile, setSelectedFile] = useState(null);
   // const [loadingImage, setLoadingImage] = useState(false);
   const [isoption, setIsoption] = useState(true);
+  useEffect(()=>{
 
+    if(!isForm2Submitted){
+      navigate("/addscholarship/ScholarShip-Form2")
+    }
+  })
   const {
     register,
     handleSubmit,
@@ -30,8 +41,28 @@ export default function UniversityForm({
   } = useForm({
     mode: "onChange",
   });
-
   useEffect(() => {
+    const savedData = localStorage.getItem("universityData");
+    if (savedData) {
+      const formData = JSON.parse(savedData);
+      Object.keys(formData).forEach((key) => {
+        setValue(key, formData[key], { shouldValidate: true });
+      });
+    }
+  }, [setValue]);
+  useEffect(() => {
+
+    // const storedData = localStorage.getItem("universityData");
+    // if (storedData) {
+    //   const parsedData = JSON.parse(storedData);
+    //   // setValue("universityName", parsedData.universityName || "");
+    //   // setValue("universityAddress", parsedData.universityAddress || "");
+    //   // setValue("universityFaculty", parsedData.universityFaculty || "");
+    //   // setValue("universityEmail", parsedData.universityEmail || "");
+    //   // setValue("universityPageUrl", parsedData.universityPageUrl || "");
+    //   // setValue("universityImage", parsedData.universityImage || "");
+    //   // setValue("universityPhone", parsedData.universityPhone || "");
+    // }
     const subscription = watch((value) => {
       if (value.universityName && value.universityName !== "other") {
         const selectedUniversity = university.find(
@@ -104,9 +135,7 @@ export default function UniversityForm({
 
     if (selectedFile) {
       formData.append("image", selectedFile);
-      // console.log("Image file added:", selectedFile);
     } else {
-      // console.log("No image file available");
       formData.append("image", "hamada");
     }
 
@@ -117,19 +146,12 @@ export default function UniversityForm({
 
     try {
       setLoading(true);
-      // setTimeout(() => {
-      //   setLoading(false);
-      // }, 4000);
-
+     
       const token = localStorage.getItem("token");
 
-      // console.log("Adding new university:", formData);
 
       const addedUniversity = await adduniversity(formData, token);
 
-      // console.log("Newly added university:", addedUniversity);
-
-      //  setSelectedUniversityData(addedUniversity.date);
 
       setUniversity((prevUniversities) => [
         ...prevUniversities,
@@ -156,7 +178,6 @@ export default function UniversityForm({
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-12">
-        <Toaster />
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full">
           <form className="space-y-6">
             <div className="animate-pulse">
@@ -187,7 +208,6 @@ export default function UniversityForm({
   }
 
   const onSubmit = async (data) => {
-    // console.log("Form Data:", data);
     onSubmitSuccess(data);
     setLoading(true);
     try {
@@ -203,7 +223,7 @@ export default function UniversityForm({
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-12">
-      <Toaster />
+      
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="flex items-center">
@@ -446,23 +466,45 @@ export default function UniversityForm({
           {showOtherUniversity && (
             <button
               type="button"
-              className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+            
               onClick={handleAddUniversity}
-              disabled={loading}
+              disabled={!isValid||loading}
+              className={`"mt-2 text-white px-4 py-2 rounded" ${
+      isValid
+        ? "bg-[#003a65] hover:bg-[#002a4b]"
+        : "bg-blue-600 hover:bg-blue-700"
+    } disabled:bg-gray-400 focus:outline-none`}
             >
               {loading ? "Adding..." : "Add University"}
             </button>
           )}
 
+{editMode ? (
+        <button
+        type="submit"
+        disabled={!isValid || loading||showOtherUniversity}
+        className={`w-full py-3  text-white rounded-lg ${
+          isValid
+            ? "bg-[#003a65] hover:bg-[#002a4b]"
+            : "bg-blue-600 hover:bg-blue-700"
+        } disabled:bg-gray-400 focus:outline-none`}
+      >
+        {loading ? "editting..." : "Edit"}
+      </button>
+
+) : (
           <button
             type="submit"
             disabled={!isValid || loading||showOtherUniversity}
-            className={`w-full py-3  text-white rounded-lg bg-[#003a65] hover:bg-[#002a4b]"
-              
-             disabled:bg-gray-400 focus:outline-none`}
+            className={`w-full py-3  text-white rounded-lg ${
+              isValid
+                ? "bg-[#003a65] hover:bg-[#002a4b]"
+                : "bg-blue-600 hover:bg-blue-700"
+            } disabled:bg-gray-400 focus:outline-none`}
           >
             {loading ? "Submitting..." : "Submit"}
           </button>
+          )}
         </form>
       </div>
     </div>

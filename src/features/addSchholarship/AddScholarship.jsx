@@ -10,6 +10,8 @@ import { getAllSelectData } from "../../services/AddScholarship";
 import { postScholarship } from "../../services/PostScholarship";
 import Submitted from "./Submitted";
 import ProtectedRoute from "./../../ui/ProtectedRoute";
+import { updatePortfolio } from "../../services/UpdateScholarship";
+import toast from "react-hot-toast";
 
 export default function AddScholarship() {
   const [form1Data, setForm1Data] = useState({});
@@ -34,6 +36,12 @@ export default function AddScholarship() {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const [editMode, setEditMode] = useState(false);
+  const [id, setId] = useState(null);
+ 
+
+
 
   useEffect(() => {
     const form1State = localStorage.getItem("isForm1Submitted");
@@ -65,6 +73,7 @@ export default function AddScholarship() {
       setUniversityData(JSON.parse(savedUniversityData));
     }
   }, []);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -110,46 +119,105 @@ export default function AddScholarship() {
       ...form2Data,
       ...data,
     };
-    const finalDataForBackend = {
-      fieldOfStudyId: combinedData.fieldOfStudy,
-      courseTypeId: combinedData.courseType,
-      modeOfStudyId: combinedData.modeOfStudy,
-      universityId: combinedData.universityName,
-      languageId: combinedData.language,
-      isFree: combinedData.isFree,
-      isFullTime: combinedData.isFullTime,
-      isWinter: combinedData.isWinter,
-      country: combinedData.country,
-      duration: combinedData.duration,
-      title: combinedData.title,
-      description: combinedData.description,
-      gpa:
-        combinedData.gpaOption === "other"
-          ? combinedData.gpa
-          : combinedData.gpaOption,
-    };
 
-    // console.log("finalDataForBackend:", finalDataForBackend);
-
-    try {
-      const token = localStorage.getItem("token");
-      const response = await postScholarship(finalDataForBackend, token);
-      console.log("Successfully added scholarship:", response);
-
-      setIsForm1Submitted(false);
-      setIsForm2Submitted(false);
-      localStorage.removeItem("form1Data");
-      localStorage.removeItem("form2Data");
-      localStorage.removeItem("universityData");
-      setForm1Data({});
-      setForm2Data({});
-      setUniversityData({});
-      localStorage.setItem("isForm1Submitted", JSON.stringify(false));
-      localStorage.setItem("isForm2Submitted", JSON.stringify(false));
-    } catch (error) {
-      console.error("Error submitting the final data:", error);
-    }
+    if (String(editMode) === 'true') {
+      const finalDataForBackend = {
+        fieldOfStudyId: combinedData.fieldOfStudy,
+        courseTypeId: combinedData.courseType,
+        modeOfStudyId: combinedData.modeOfStudy,
+        universityId: combinedData.universityName,
+        languageId: combinedData.language,
+        isFree: combinedData.isFree,
+        isFullTime: combinedData.isFullTime,
+        isWinter: combinedData.isWinter,
+        country: combinedData.country,
+        duration: combinedData.duration,
+        title: combinedData.title,
+        description: combinedData.description,
+        gpa:combinedData.gpa
+        // gpa:
+        //   combinedData.gpaOption === "other"
+        //     ? combinedData.gpa
+        //     : combinedData.gpaOption,
+      };
+  
+  
+      try {
+        const token = localStorage.getItem("token");
+        const res =  updatePortfolio(finalDataForBackend,id, token);
+        toast.promise(res, {
+          loading: "editing Scholarship...",
+          success: "edited Scholarship successfully!",
+          error: (error) => error.message,
+        });
+        const response=await res
+  
+        setIsForm1Submitted(false);
+        setIsForm2Submitted(false);
+        localStorage.removeItem("form1Data");
+        localStorage.removeItem("form2Data");
+         localStorage.removeItem("universityData");
+         localStorage.removeItem("id");
+         localStorage.removeItem("editMode");
+         setEditMode(false)
+        setForm1Data({});
+        setForm2Data({});
+        setUniversityData({});
+        localStorage.setItem("isForm1Submitted", JSON.stringify(false));
+        localStorage.setItem("isForm2Submitted", JSON.stringify(false));
+      } catch (error) {
+        console.error("Error submitting the final data:", error);
+      }
+      
+    
+    } else {
+   
+      const finalDataForBackend = {
+        fieldOfStudyId: combinedData.fieldOfStudy,
+        courseTypeId: combinedData.courseType,
+        modeOfStudyId: combinedData.modeOfStudy,
+        universityId: combinedData.universityName,
+        languageId: combinedData.language,
+        isFree: combinedData.isFree,
+        isFullTime: combinedData.isFullTime,
+        isWinter: combinedData.isWinter,
+        country: combinedData.country,
+        duration: combinedData.duration,
+        title: combinedData.title,
+        description: combinedData.description,
+        gpa:
+          combinedData.gpaOption === "other"
+            ? combinedData.gpa
+            : combinedData.gpaOption,
+      };
+  
+  
+      try {
+        const token = localStorage.getItem("token");
+        const res =  postScholarship(finalDataForBackend, token);
+        toast.promise(res, {
+          loading: "adding Scholarship...",
+          success: "added Scholarship successfully!",
+          error: (error) => error.message,
+        });
+        const response=await res
+        
+  
+        setIsForm1Submitted(false);
+        setIsForm2Submitted(false);
+        localStorage.removeItem("form1Data");
+        localStorage.removeItem("form2Data");
+        localStorage.removeItem("universityData");
+        setForm1Data({});
+        setForm2Data({});
+        setUniversityData({});
+        localStorage.setItem("isForm1Submitted", JSON.stringify(false));
+        localStorage.setItem("isForm2Submitted", JSON.stringify(false));
+      } catch (error) {
+        console.error("Error submitting the final data:", error);
+      }
   };
+}
 
   if (loading) {
     return (
@@ -258,9 +326,9 @@ export default function AddScholarship() {
           {location.pathname !== "/addscholarship/submitted" && (
             <RepeatPara>
               <h3 className=" text-3xl text-center sm:text-xl md:text-6xl">
-                New Scholarship
+              {editMode ? "Edit Scholarship" : "New Scholarship"}
               </h3>
-            </RepeatPara>
+            </RepeatPara> 
           )}
         </div>
         {location.pathname !== "/addscholarship/submitted" && (
@@ -287,6 +355,9 @@ export default function AddScholarship() {
                   fieldsOfStudy={fieldOfStudy}
                   setCourseType={setCourseType}
                   setFieldOfStudy={setFieldOfStudy}
+                  setEditMode={setEditMode}
+                  setId={setId}
+                  
                 />
               }
             />
@@ -306,6 +377,8 @@ export default function AddScholarship() {
                   modeOfStudy={modeOfStudy}
                   courseLanguage={courseLanguage}
                   setCourseLanguage={setCourseLanguage}
+                  isForm1Submitted={isForm1Submitted}
+                  isForm2Submitted={isForm2Submitted}
                 />
               }
             />
@@ -316,6 +389,8 @@ export default function AddScholarship() {
                   onSubmitSuccess={handleUniversityFormSubmit}
                   university={university}
                   setUniversity={setUniversity}
+                  isForm1Submitted={isForm1Submitted}
+                  isForm2Submitted={isForm2Submitted}
                 />
               }
             />

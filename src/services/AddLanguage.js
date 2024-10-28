@@ -2,7 +2,7 @@ const API_URL = 'https://menha-backend.vercel.app';
 
 export const addlanguage = async (languageData, token) => {
   try {
-    console.log("dddddddddddddddd",languageData)
+    
     const response = await fetch(`${API_URL}/language`, {
       method: 'POST',
       headers: {

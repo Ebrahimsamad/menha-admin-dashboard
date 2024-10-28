@@ -29,7 +29,15 @@ export default function Submitted() {
             </PrimaryButton>
           </Link>
 
-          <Link to="/addscholarship">
+          <Link to="/addscholarship" onClick={() => {
+              localStorage.removeItem("editMode");
+              localStorage.removeItem("id");
+              localStorage.removeItem("form1Data");
+              localStorage.removeItem("form2Data");
+              localStorage.removeItem("universityData");
+              localStorage.setItem("isForm1Submitted", JSON.stringify(false));
+              localStorage.setItem("isForm2Submitted", JSON.stringify(false));
+            }}>
             <PrimaryButton className="btn btn-primary bg-yellow-400 text-[#003a65] hover:bg-yellow-300">
               Add New Scholarship
             </PrimaryButton>

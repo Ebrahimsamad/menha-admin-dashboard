@@ -2,22 +2,36 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import { addlanguage } from "./../../services/AddLanguage";
+
+  
 
 export default function ScholarshipForm2({
   onSubmitSuccess,
   modeOfStudy,
   courseLanguage,
   setCourseLanguage,
+  isForm1Submitted,
+  isForm2Submitted,
 }) {
+  const [duration , setduration] = useState(""); 
   const [loading, setLoading] = useState(false);
   const [selectedLanguageData, setSelectedLanguageData] = useState(null);
   const navigate = useNavigate();
   const [showOtherLanguage, setShowOtherLanguage] = useState(false);
   const [isLanguageEditable, setIsLanguageEditable] = useState(false);
   const [isoption, setIsoption] = useState(true);
+  const editMode = localStorage.getItem("editMode");
+  const idParam = localStorage.getItem("id");
+  useEffect(()=>{
+
+    if(!isForm1Submitted){
+      navigate("/addscholarship/ScholarShip-Form1")
+    }
+  })
+
 
   const {
     register,
@@ -33,6 +47,10 @@ export default function ScholarshipForm2({
     const savedData = localStorage.getItem("form2Data");
     if (savedData) {
       const formData = JSON.parse(savedData);
+      if (formData.duration) {
+        const duration = formData.duration; 
+        setduration(duration);
+      }
       Object.keys(formData).forEach((key) => {
         setValue(key, formData[key], { shouldValidate: true });
       });
@@ -65,33 +83,25 @@ export default function ScholarshipForm2({
   const handleLanguageChange = (event) => {
     setSelectedLanguageData(null);
     const selectedValue = event.target.value;
-    // console.log("hhhhhhhhhhh",selectedValue);
 
     if (selectedValue === "other") {
       setSelectedLanguageData(null);
       setShowOtherLanguage(true);
       setIsLanguageEditable(true);
-      // setValue("course", "");
-      // console.log("other test1:", watch('course'));
+    
     } else {
-      // console.log("ffffffffffffffffffffffffffffffffffffffffffff")
       setShowOtherLanguage(false);
       setIsLanguageEditable(false);
       const selectedLanguage = courseLanguage.find(
         (lang) => lang._id === selectedValue
       );
       setSelectedLanguageData(selectedLanguage);
-      //  console.log(selectedLanguage)
+      
       if (selectedLanguage) {
         const string = selectedLanguage.course.join(",");
-        // console.log(selectedLanguage)
-        // setValue("course", string);
-        // console.log("other test2:",  watch('course'));
-        // console.log("other test22222222:",  watch('course'));
-        // setValue("course", selectedLanguage.course.join(","));
+        
       } else {
         setValue("course", "");
-        console.log("other test3:", selectedLanguageData, watch("course"));
       }
     }
   };
@@ -101,7 +111,6 @@ export default function ScholarshipForm2({
       name: watch("languageOther"),
       course: watch("course").split(","),
     };
-    // console.log(newLanguage);
     if (!newLanguage.name || newLanguage.course.length === 0) {
       toast.error(
         "Please fill in all the required fields for the new language."
@@ -113,8 +122,7 @@ export default function ScholarshipForm2({
       setLoading(true);
       const token = localStorage.getItem("token");
       const addedLanguage = await addlanguage(newLanguage, token);
-      // console.log("SSSSSSSSSS",addedLanguage);
-      // setSelectedLanguageData(addedLanguage.newLanguage);
+      
       setCourseLanguage((prevLanguages) => [
         ...prevLanguages,
         addedLanguage.newLanguage,
@@ -122,12 +130,9 @@ export default function ScholarshipForm2({
       setValue("language", addedLanguage.newLanguage._id, {
         shouldValidate: true,
       });
-
-      // console.log("testcourses2",addedLanguage.newLanguage.course)
       setShowOtherLanguage(false);
       setIsLanguageEditable(false);
       setIsoption(false);
-      // toast.success("Language added successfully!");
     } catch (error) {
       toast.error("Failed to add language. Please try again.");
     } finally {
@@ -138,7 +143,6 @@ export default function ScholarshipForm2({
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-12">
-        <Toaster />
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full">
           <form className="space-y-6">
             <div className="animate-pulse">
@@ -175,18 +179,14 @@ export default function ScholarshipForm2({
       isFree: data.funding === "Free" ? true : false,
       isFullTime: data.studyType === "Full-Time" ? true : false,
     };
-    delete transformedData.funding;
-    delete transformedData.beginning;
-    delete transformedData.studyType;
+   
 
     onSubmitSuccess(transformedData);
     setLoading(true);
     try {
-      // console.log("Form Data:",transformedData);
 
       navigate("/addscholarship/university-Form");
     } catch (error) {
-      // console.error("Error:", error);
 
       toast.error("Submission failed. Please try again.");
     } finally {
@@ -196,7 +196,6 @@ export default function ScholarshipForm2({
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-12">
-      <Toaster />
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="flex items-center">
@@ -237,7 +236,7 @@ export default function ScholarshipForm2({
             <label className="text-[#8A690F] mr-2 font-medium text-xl">
               Duration (in Years)
             </label>
-            {errors.duration ? (
+            {errors.duration &&!duration? (
               <FaExclamationCircle className="text-red-600" />
             ) : (
               <FaCheckCircle className="text-green-600" />
@@ -245,8 +244,10 @@ export default function ScholarshipForm2({
           </div>
           <input
             type="number"
+            value={duration}
             {...register("duration", {
-              required: "Duration is required",
+              // required: "Duration is required",
+              onChange: (e) => setduration(e.target.value),
               min: {
                 value: 1,
                 message: "Duration must be at least 1 year",
@@ -375,9 +376,14 @@ export default function ScholarshipForm2({
           {showOtherLanguage && (
             <button
               type="button"
-              className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
               onClick={handleAddLanguage}
-              disabled={loading}
+              disabled={!isValid ||loading}
+              className={`"mt-2 text-white px-4 py-2 rounded" ${
+                isValid
+                  ? "bg-[#003a65] hover:bg-[#002a4b]"
+                  : "bg-blue-600 hover:bg-blue-700"
+              } disabled:bg-gray-400 focus:outline-none`}
+              
             >
               {loading ? "Adding..." : "Add Language"}
             </button>
@@ -399,6 +405,7 @@ export default function ScholarshipForm2({
             })}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-[#003a65] focus:ring-[#003a65] focus:border-[#003a65]"
           >
+              <option value="">Select beginning value</option>
             <option value="Winter">Winter</option>
             <option value="Summer">Summer</option>
           </select>
@@ -420,6 +427,7 @@ export default function ScholarshipForm2({
             {...register("funding", { required: "Funding status is required" })}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-[#003a65] focus:ring-[#003a65] focus:border-[#003a65]"
           >
+            <option value="">Select funding value</option>
             <option value="Free">Free</option>
             <option value="Not-Free">Not-Free</option>
           </select>
@@ -443,6 +451,7 @@ export default function ScholarshipForm2({
             })}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-[#003a65] focus:ring-[#003a65] focus:border-[#003a65]"
           >
+            <option value="">Select study Type</option>
             <option value="Full-Time">Full-Time</option>
             <option value="Part-Time">Part-Time</option>
           </select>
@@ -450,17 +459,32 @@ export default function ScholarshipForm2({
             <p className="text-red-600">{errors.studyType.message}</p>
           )}
 
+          {editMode ? (
+        <button
+        type="submit"
+        disabled={!isValid || loading||showOtherLanguage}
+        className={`w-full py-3  text-white rounded-lg ${
+          isValid
+            ? "bg-[#003a65] hover:bg-[#002a4b]"
+            : "bg-blue-600 hover:bg-blue-700"
+        } disabled:bg-gray-400 focus:outline-none`}
+      >
+        {loading ? "editting..." : "Next"}
+      </button>
+
+) : (
           <button
             type="submit"
             disabled={!isValid || loading||showOtherLanguage}
-            className={`w-full py-3 text-white rounded-lg ${
+            className={`w-full py-3  text-white rounded-lg ${
               isValid
                 ? "bg-[#003a65] hover:bg-[#002a4b]"
                 : "bg-blue-600 hover:bg-blue-700"
             } disabled:bg-gray-400 focus:outline-none`}
           >
-            {loading ? "Submitting..." : "Submit"}
+            {loading ? "Submitting..." : "Next"}
           </button>
+          )}
         </form>
       </div>
     </div>
