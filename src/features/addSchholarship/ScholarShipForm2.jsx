@@ -330,20 +330,20 @@ export default function ScholarshipForm2({
               <input
                 type="text"
                 {...register("languageOther", {
-                  required: "Please specify the university name",
+                  required: "Please specify the language name",
                   pattern: {
                     value: /^[a-zA-Z\s]+$/,
                     message:
-                      "university Name must only contain letters and spaces",
+                      "language Name must only contain letters and spaces",
                   },
                   validate: {
                     startsWithCapital: (value) =>
                       /^[A-Z]/.test(value) ||
-                      "university Name must start with a capital letter",
+                      "language Name must start with a capital letter",
                   },
                 })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md mt-2 focus:outline-[#003a65] focus:ring-[#003a65] focus:border-[#003a65]"
-                placeholder="Enter university name"
+                placeholder="Enter language name"
                 disabled={!isLanguageEditable}
               />
               {errors.languageOther && (
@@ -377,7 +377,7 @@ export default function ScholarshipForm2({
             <button
               type="button"
               onClick={handleAddLanguage}
-              disabled={!isValid ||loading}
+              disabled={isValid ||loading}
               className={`"mt-2 text-white px-4 py-2 rounded" ${
                 isValid
                   ? "bg-[#003a65] hover:bg-[#002a4b]"
